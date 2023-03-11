@@ -1,0 +1,6 @@
+Python TinyDB tutorial:
+- https://youtu.be/aP2KJoTITO0
+
+Systems Requirement Specification:
+- https://www.jamasoftware.com/requirements-management-guide/writing-requirements/how-to-write-system-requirement-specification-srs-documents
+
