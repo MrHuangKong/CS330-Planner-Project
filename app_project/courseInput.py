@@ -1,4 +1,5 @@
 # Adding this line for Exercise 7 - NH
+# Adding this line for Exercise 7 - DZ
 
 import tkinter
 import customtkinter
