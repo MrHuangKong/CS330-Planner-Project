@@ -13,3 +13,6 @@
 - Run in PowerShell, Terminal/Console, or CMD:
 - - pip install tk 
 - - pip install customtkinter
+
+## Install Pip
+- https://www.activestate.com/resources/quick-reads/how-to-install-pip-on-windows/
