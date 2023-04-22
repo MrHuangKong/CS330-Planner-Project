@@ -33,7 +33,7 @@ class MainWindow(ctk.CTk):
         """
         # Set window mode to main gui
         self.windowMode = 0
-        
+
         # Specify Grid (Rows x Columns) for our buttons and labels
         for i in range(0, 4):
             Grid.rowconfigure(self, i, weight=1)
