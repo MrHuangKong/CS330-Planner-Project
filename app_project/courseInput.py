@@ -59,64 +59,71 @@ class MainWindow(ctk.CTk):
         name = self.courseEntry.get()
         code = self.codeEntry.get()
         credit = self.creditEntry.get()
-        meeting = self.meetingTimeEntry.get()
+        # meeting = self.meetingTimeEntry.get()
+        location = self.locationEntry.get()
+        section = self.courseSectionEntry.get()
         instructor = self.instructorEntry.get()
 
         # Clean our entries
         name = self.cleanText(name)
         code = self.cleanText(code).upper()
         credit = self.cleanText(credit)
-        meeting = self.cleanText(meeting).upper()
+        # meeting = self.cleanText(meeting).upper()
+        location = self.cleanText(location)
+        section = self.cleanText(section)
         instructor = self.cleanText(instructor)
 
         # Create a state to break out of our loop
         notFound = True
 
         # Make sure all entry's are filled
-        if len(name) and len(code) and len(credit) and len(meeting) and len(instructor):
+        if len(name) and len(code) and len(credit) and len(instructor) and len(section) and len(location):
             # Check if Course overlaps with previously saved courses
             database = self.db.all()
             # Is database empty?
             if len(database) != 0:
                 for courses in database:
                     # If we have a duplicate
-                    if (courses['name'] == name and courses['number'] == code and courses['credit'] == credit and
-                            courses['meeting'] == meeting and courses['instructor'] == instructor):
+                    if (courses['name'] == name and courses['number'] == code and courses['credit'] == credit
+                            and courses['instructor'] == instructor and courses['location'] == location and
+                            courses['section'] == section):
                         tkinter.messagebox.showwarning("Warning", "Course already exists!")
                         notFound = False
                     # If we have a time conflict
-                    elif courses['meeting'] == meeting:
-                        tkinter.messagebox.showwarning("Warning", f"Unable to add course, time conflict with "
-                                                                  f"{courses['number']}: {courses['name']} at "
-                                                                  f"{courses['meeting']}")
-                        notFound = False
+                    # elif courses['meeting'] == meeting:
+                    #     tkinter.messagebox.showwarning("Warning", f"Unable to add course, time conflict with "
+                    #                                               f"{courses['number']}: {courses['name']} at ")
+                    #
+                    #     notFound = False
                 # If there are no duplicates or time conflicts, save to database
                 if notFound:
                     # Save information to data base
-                    course = {'name': name, 'number': code, 'credit': credit, 'meeting': meeting,
-                              'instructor': instructor}
+                    course = {'number': code, 'name': name, 'section': section, 'credit': credit,
+                              'instructor': instructor, 'location': location}
                     self.db.insert(course)
-                    # print(self.db.all())
+                    print(self.db.all())
 
                     # Clear our entries
                     self.courseEntry.delete(0, ctk.END)
                     self.codeEntry.delete(0, ctk.END)
                     self.creditEntry.delete(0, ctk.END)
-                    self.meetingTimeEntry.delete(0, ctk.END)
+                    self.locationEntry.delete(0, ctk.END)
                     self.instructorEntry.delete(0, ctk.END)
+
+
             # Database is empty, add course
             else:
                 # Save information to data base
-                course = {'name': name, 'number': code, 'credit': credit, 'meeting': meeting,
-                          'instructor': instructor}
+                course = {'number': code, 'name': name, 'section': section, 'credit': credit,
+                          'instructor': instructor, 'location': location}
                 self.db.insert(course)
-                # print(self.db.all())
+                print(self.db.all())
 
                 # Clear our entries
                 self.courseEntry.delete(0, ctk.END)
                 self.codeEntry.delete(0, ctk.END)
                 self.creditEntry.delete(0, ctk.END)
-                self.meetingTimeEntry.delete(0, ctk.END)
+                self.locationEntry.delete(0, ctk.END)
                 self.instructorEntry.delete(0, ctk.END)
                 self.courseSectionEntry.delete(0, ctk.END)
 
@@ -320,8 +327,6 @@ class MainWindow(ctk.CTk):
         self.endAmPmMenu = ctk.CTkOptionMenu(self.endTimeFrame, width=20, values=["AM", "PM"])
         self.endAmPmMenu.grid(row=0, column=4, padx=5, pady=5, sticky="EW")
         self.mainGuiElements.append(self.endAmPmMenu)
-
-
 
     def weeklyGui(self):
         """
