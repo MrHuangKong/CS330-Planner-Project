@@ -66,21 +66,58 @@ class MainWindow(ctk.CTk):
         name = self.cleanText(name)
         code = self.cleanText(code).upper()
         credit = self.cleanText(credit)
+        meeting = self.cleanText(meeting).upper()
         instructor = self.cleanText(instructor)
+
+        # Create a state to break out of our loop
+        notFound = True
 
         # Make sure all entry's are filled
         if len(name) and len(code) and len(credit) and len(meeting) and len(instructor):
-            # Save information to data base
-            course = {'name': name, 'number': code, 'credit': credit, 'meeting': meeting, 'instructor': instructor}
-            self.db.insert(course)
-            print(self.db.all())
+            # Check if Course overlaps with previously saved courses
+            database = self.db.all()
+            # Is database empty?
+            if len(database) != 0:
+                for courses in database:
+                    # If we have a duplicate
+                    if (courses['name'] == name and courses['number'] == code and courses['credit'] == credit and
+                            courses['meeting'] == meeting and courses['instructor'] == instructor):
+                        tkinter.messagebox.showwarning("Warning", "Course already exists!")
+                        notFound = False
+                    # If we have a time conflict
+                    elif courses['meeting'] == meeting:
+                        tkinter.messagebox.showwarning("Warning", f"Unable to add course, time conflict with "
+                                                                  f"{courses['number']}: {courses['name']} at "
+                                                                  f"{courses['meeting']}")
+                        notFound = False
+                # If there are no duplicates or time conflicts, save to database
+                if notFound:
+                    # Save information to data base
+                    course = {'name': name, 'number': code, 'credit': credit, 'meeting': meeting,
+                              'instructor': instructor}
+                    self.db.insert(course)
+                    # print(self.db.all())
 
-            # Clear our entries
-            self.courseEntry.delete(0, ctk.END)
-            self.codeEntry.delete(0, ctk.END)
-            self.creditEntry.delete(0, ctk.END)
-            self.meetingTimeEntry.delete(0, ctk.END)
-            self.instructorEntry.delete(0, ctk.END)
+                    # Clear our entries
+                    self.courseEntry.delete(0, ctk.END)
+                    self.codeEntry.delete(0, ctk.END)
+                    self.creditEntry.delete(0, ctk.END)
+                    self.meetingTimeEntry.delete(0, ctk.END)
+                    self.instructorEntry.delete(0, ctk.END)
+            # Database is empty, add course
+            else:
+                # Save information to data base
+                course = {'name': name, 'number': code, 'credit': credit, 'meeting': meeting,
+                          'instructor': instructor}
+                self.db.insert(course)
+                # print(self.db.all())
+
+                # Clear our entries
+                self.courseEntry.delete(0, ctk.END)
+                self.codeEntry.delete(0, ctk.END)
+                self.creditEntry.delete(0, ctk.END)
+                self.meetingTimeEntry.delete(0, ctk.END)
+                self.instructorEntry.delete(0, ctk.END)
 
         else:
             tkinter.messagebox.showwarning("Warning", "All course information must be filled out")
@@ -113,17 +150,17 @@ class MainWindow(ctk.CTk):
         # Create course list button
         courseListButton = ctk.CTkButton(self, text="Course List")
         courseListButton.grid(row=0, column=2, pady=5, sticky="EW")
-        self.mainGuiElements.append(courseListButton)
+        self.mainGuiElements.append(courseListButton)  # Add to our list of elements so we can delete it
 
         # Add course button
         addCourseButton = ctk.CTkButton(self, text="Add Course", command=self.saveCourse)
         addCourseButton.grid(row=3, column=2, padx=5, pady=5, sticky="EW")
-        self.mainGuiElements.append(addCourseButton)
+        self.mainGuiElements.append(addCourseButton)  # Add to our list of elements so we can delete it
 
         # Weekly View button
         weeklyView = ctk.CTkButton(self, text="Weekly View", command=self.weeklyGui)
         weeklyView.grid(row=0, column=0, padx=5, pady=5, sticky="EW")
-        self.mainGuiElements.append(weeklyView)
+        self.mainGuiElements.append(weeklyView)  # Add to our list of elements so we can delete it
 
         # ---------------------------------------------------------------
         #                         Entry Fields
