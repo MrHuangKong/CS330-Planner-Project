@@ -4,8 +4,11 @@
 # ----------------------------------------------------------------------------------------------------------------------
 
 import tkinter
+import tkinter.messagebox
+
 import customtkinter as ctk
 from tkinter import *
+from tinydb import TinyDB, Query
 
 
 class MainWindow(ctk.CTk):
@@ -19,12 +22,68 @@ class MainWindow(ctk.CTk):
         self.listGuiElements = []
         self.weeklyGuiElements = []
 
+        # Start the Database
+        self.db = TinyDB('courses.json')
+
         # Define a boolean variable to switch between the windows
         self.windowMode = 0  # 0 - Main, 1 - List, 2 - Weekly view
 
         # Set window's frame to the courseInput gui
         self.courseInputGUI()
 
+    def __del__(self):
+        # Close the database
+        self.db.close()
+
+    def cleanText(self, text: str) -> str:
+        """
+        Cleans a string by removing punctuation, and capitalizing it
+        :param text: A string to clean
+        :return: A cleaned string
+        """
+        # Define a set of characters to filter out
+        filters = ("!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "\"", "/", "\n",
+                   ",", ".", "?", "~", "`", "-", "\'", "\\", "+", "=")
+
+        # Clean user inputted strings
+        for filter_ in filters:
+            text = text.replace(f"{filter_}", "")
+        return text.title()
+
+    def saveCourse(self):
+        """
+        Save all course information into the database
+        :return: None
+        """
+        # Save the lengths of each entry box
+        name = self.courseEntry.get()
+        code = self.codeEntry.get()
+        credit = self.creditEntry.get()
+        meeting = self.meetingTimeEntry.get()
+        instructor = self.instructorEntry.get()
+
+        # Clean our entries
+        name = self.cleanText(name)
+        code = self.cleanText(code).upper()
+        credit = self.cleanText(credit)
+        instructor = self.cleanText(instructor)
+
+        # Make sure all entry's are filled
+        if len(name) and len(code) and len(credit) and len(meeting) and len(instructor):
+            # Save information to data base
+            course = {'name': name, 'number': code, 'credit': credit, 'meeting': meeting, 'instructor': instructor}
+            self.db.insert(course)
+            print(self.db.all())
+
+            # Clear our entries
+            self.courseEntry.delete(0, ctk.END)
+            self.codeEntry.delete(0, ctk.END)
+            self.creditEntry.delete(0, ctk.END)
+            self.meetingTimeEntry.delete(0, ctk.END)
+            self.instructorEntry.delete(0, ctk.END)
+
+        else:
+            tkinter.messagebox.showwarning("Warning", "All course information must be filled out")
 
     def courseInputGUI(self):
         """
@@ -57,7 +116,7 @@ class MainWindow(ctk.CTk):
         self.mainGuiElements.append(courseListButton)
 
         # Add course button
-        addCourseButton = ctk.CTkButton(self, text="Add Course")
+        addCourseButton = ctk.CTkButton(self, text="Add Course", command=self.saveCourse)
         addCourseButton.grid(row=3, column=2, padx=5, pady=5, sticky="EW")
         self.mainGuiElements.append(addCourseButton)
 
@@ -71,28 +130,29 @@ class MainWindow(ctk.CTk):
         # ---------------------------------------------------------------
 
         # Course name
-        courseEntry = ctk.CTkEntry(self, placeholder_text="Course Name")
-        courseEntry.grid(row=2, column=0, padx=5, sticky="EW")
-        self.mainGuiElements.append(courseEntry)
+        self.courseEntry = ctk.CTkEntry(self, placeholder_text="Course Name")
+        self.courseEntry.grid(row=2, column=0, padx=5, sticky="EW")
+        self.mainGuiElements.append(self.courseEntry)
 
         # Course code entry
-        codeEntry = ctk.CTkEntry(self, placeholder_text="Course Code")
-        codeEntry.grid(row=2, column=1, sticky="EW")
-        self.mainGuiElements.append(codeEntry)
+        self.codeEntry = ctk.CTkEntry(self, placeholder_text="Course Code")
+        self.codeEntry.grid(row=2, column=1, sticky="EW")
+        self.mainGuiElements.append(self.codeEntry)
 
         # Course Credit
-        creditEntry = ctk.CTkEntry(self, placeholder_text="Credit(s)")
-        creditEntry.grid(row=2, column=2, padx=5, sticky="EW")
-        self.mainGuiElements.append(creditEntry)
+        self.creditEntry = ctk.CTkEntry(self, placeholder_text="Credit(s)")
+        self.creditEntry.grid(row=2, column=2, padx=5, sticky="EW")
+        self.mainGuiElements.append(self.creditEntry)
 
         # Course meeting time
-        meetingTimeEntry = ctk.CTkEntry(self, placeholder_text="Meeting Time")
-        meetingTimeEntry.grid(row=3, column=0, padx=5, pady=5, sticky="EW")
-        self.mainGuiElements.append(meetingTimeEntry)
+        self.meetingTimeEntry = ctk.CTkEntry(self, placeholder_text="Meeting Time")
+        self.meetingTimeEntry.grid(row=3, column=0, padx=5, pady=5, sticky="EW")
+        self.mainGuiElements.append(self.meetingTimeEntry)
 
-        instructorEntry = ctk.CTkEntry(self, placeholder_text="Instructor Name")
-        instructorEntry.grid(row=3, column=1, pady=5, sticky="EW")
-        self.mainGuiElements.append(instructorEntry)
+        # Course Instructor name
+        self.instructorEntry = ctk.CTkEntry(self, placeholder_text="Instructor Name")
+        self.instructorEntry.grid(row=3, column=1, pady=5, sticky="EW")
+        self.mainGuiElements.append(self.instructorEntry)
 
     def weeklyGui(self):
         """
