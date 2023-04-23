@@ -158,11 +158,6 @@ class MainWindow(ctk.CTk):
         courseListButton.grid(row=0, column=2, padx=15, pady=5, sticky="EW")
         self.mainGuiElements.append(courseListButton)  # Add to our list of elements so we can delete it
 
-        # Add course button
-        addCourseButton = ctk.CTkButton(self, text="Add Course", command=self.saveCourse)
-        addCourseButton.grid(row=3, column=2, padx=5, pady=5, sticky="EW")
-        self.mainGuiElements.append(addCourseButton)  # Add to our list of elements so we can delete it
-
         # Weekly View button
         weeklyView = ctk.CTkButton(self, text="Weekly View", command=self.weeklyGui)
         weeklyView.grid(row=0, column=0, padx=15, pady=5, sticky="EW")
@@ -171,7 +166,7 @@ class MainWindow(ctk.CTk):
         # Add course button
         addCourseButton = ctk.CTkButton(self, text="Add Course", command=self.saveCourse)
         addCourseButton.grid(row=5, column=2, padx=50, pady=5, sticky="EW")
-        self.mainGuiElements.append(addCourseButton)
+        self.mainGuiElements.append(addCourseButton)  # Add to our list of elements so we can delete it
 
 
         # ---------------------------------------------------------------
@@ -219,44 +214,47 @@ class MainWindow(ctk.CTk):
         self.mainGuiElements.append(self.checkBoxFrame)
 
         # Sunday
-        self.dayOfTheWeekCheckBoxSunday = ctk.CTkCheckBox(self.checkBoxFrame, text="Sun")
-        self.dayOfTheWeekCheckBoxSunday.grid(row=0, column=0, pady=5, sticky="EW")
-        self.mainGuiElements.append(self.dayOfTheWeekCheckBoxSunday)
+        self.checkBoxSunday = ctk.CTkCheckBox(self.checkBoxFrame, text="Sun")
+        self.checkBoxSunday.grid(row=0, column=0, pady=5, sticky="EW")
+        self.mainGuiElements.append(self.checkBoxSunday)
 
         # Monday
-        self.dayOfTheWeekCheckBoxMonday = ctk.CTkCheckBox(self.checkBoxFrame, text="Mon")
-        self.dayOfTheWeekCheckBoxMonday.grid(row=0, column=1, pady=5, sticky="EW")
-        self.mainGuiElements.append(self.dayOfTheWeekCheckBoxMonday)
+        self.checkBoxMonday = ctk.CTkCheckBox(self.checkBoxFrame, text="Mon")
+        self.checkBoxMonday.grid(row=0, column=1, pady=5, sticky="EW")
+        self.mainGuiElements.append(self.checkBoxMonday)
 
         # Tuesday
-        self.dayOfTheWeekCheckBoxTuesday = ctk.CTkCheckBox(self.checkBoxFrame, text="Tue")
-        self.dayOfTheWeekCheckBoxTuesday.grid(row=0, column=2, pady=5, sticky="EW")
-        self.mainGuiElements.append(self.dayOfTheWeekCheckBoxTuesday)
+        self.checkBoxTuesday = ctk.CTkCheckBox(self.checkBoxFrame, text="Tue")
+        self.checkBoxTuesday.grid(row=0, column=2, pady=5, sticky="EW")
+        self.mainGuiElements.append(self.checkBoxTuesday)
 
         # Wednesday
-        self.dayOfTheWeekCheckBoxWednesday = ctk.CTkCheckBox(self.checkBoxFrame, text="Wed")
-        self.dayOfTheWeekCheckBoxWednesday.grid(row=0, column=4, pady=5, sticky="EW")
-        self.mainGuiElements.append(self.dayOfTheWeekCheckBoxWednesday)
+        self.checkBoxWednesday = ctk.CTkCheckBox(self.checkBoxFrame, text="Wed")
+        self.checkBoxWednesday.grid(row=0, column=4, pady=5, sticky="EW")
+        self.mainGuiElements.append(self.checkBoxWednesday)
 
         # Thursday
-        self.dayOfTheWeekCheckBoxThursday = ctk.CTkCheckBox(self.checkBoxFrame, text="Thur")
-        self.dayOfTheWeekCheckBoxThursday.grid(row=0, column=5, pady=5, sticky="EW")
-        self.mainGuiElements.append(self.dayOfTheWeekCheckBoxThursday)
+        self.checkBoxThursday = ctk.CTkCheckBox(self.checkBoxFrame, text="Thu")
+        self.checkBoxThursday.grid(row=0, column=5, pady=5, sticky="EW")
+        self.mainGuiElements.append(self.checkBoxThursday)
 
         # Friday
-        self.dayOfTheWeekCheckBoxFriday = ctk.CTkCheckBox(self.checkBoxFrame, text="Fri")
-        self.dayOfTheWeekCheckBoxFriday.grid(row=0, column=6, pady=5, sticky="EW")
-        self.mainGuiElements.append(self.dayOfTheWeekCheckBoxFriday)
+        self.checkBoxFriday = ctk.CTkCheckBox(self.checkBoxFrame, text="Fri")
+        self.checkBoxFriday.grid(row=0, column=6, pady=5, sticky="EW")
+        self.mainGuiElements.append(self.checkBoxFriday)
 
         # Saturday
-        self.dayOfTheWeekCheckBoxSaturday = ctk.CTkCheckBox(self.checkBoxFrame, text="Sat")
-        self.dayOfTheWeekCheckBoxSaturday.grid(row=0, column=7, pady=5, sticky="EW")
-        self.mainGuiElements.append(self.dayOfTheWeekCheckBoxSaturday)
+        self.checkBoxSaturday = ctk.CTkCheckBox(self.checkBoxFrame, text="Sat")
+        self.checkBoxSaturday.grid(row=0, column=7, pady=5, sticky="EW")
+        self.mainGuiElements.append(self.checkBoxSaturday)
 
         # ---------------------------------------------------------------
         #                         Option Menu
         # ---------------------------------------------------------------
 
+        # ---------------------------------
+        # Option Menu Lags Window, pls fix -NH
+        # ---------------------------------
         # Frame to add the Start hours, minutes, and AM/PM option menus to
         self.startTimeFrame = ctk.CTkFrame(self, width=5, height=15, fg_color="transparent")
         self.startTimeFrame.grid(row=5, column=0, rowspan=1, sticky="EW")
