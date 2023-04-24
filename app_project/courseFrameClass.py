@@ -55,6 +55,10 @@ class CourseFrame(ctk.CTk):
         return time
 
     def createUI(self):
+        """
+        creates a frame that holds labels with all the course information
+        :return: None
+        """
         self.frame = ctk.CTkFrame(
             self.containingFrame,
             width=380,
@@ -113,12 +117,14 @@ class CourseFrame(ctk.CTk):
             text=startEndTime)
         self.meetingTimeLabel.grid(row=1, column=2, padx=10)
 
+        # adding delete button to frame
         self.deleteButton = ctk.CTkButton(
             self.frame,
             text="🗑",
             width=30)
         self.deleteButton.grid(row=0, column=3, padx=5, pady=5)
 
+        # adding edit button to frame
         self.editButton = ctk.CTkButton(
             self.frame,
             text="✎",
