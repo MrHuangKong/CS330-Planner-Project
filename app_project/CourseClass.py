@@ -1,6 +1,6 @@
 # Devin Zeller & Nicolas Huang
 # CS330 - Software Engineering Project
-# Course Frame Class
+# Course Class
 # ----------------------------------------------------------------------------------------------------------------------
 
 import tkinter
