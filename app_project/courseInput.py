@@ -59,16 +59,37 @@ class MainWindow(ctk.CTk):
         name = self.courseEntry.get()
         code = self.codeEntry.get()
         credit = self.creditEntry.get()
-        # meeting = self.meetingTimeEntry.get()
         location = self.locationEntry.get()
         section = self.courseSectionEntry.get()
         instructor = self.instructorEntry.get()
+
+        # Save the days of the week to a list
+        dayOfWeek = [self.checkBoxSunday.get(), self.checkBoxMonday.get(), self.checkBoxTuesday.get(),
+                     self.checkBoxWednesday.get(), self.checkBoxThursday.get(), self.checkBoxFriday.get(),
+                     self.checkBoxSaturday.get()]
+
+        # Save the time from the option menu
+        sH = int(self.startHoursMenu.get())
+        sM = int(self.startMinutesMenu.get())
+        eH = int(self.endHoursMenu.get())
+        eM = int(self.endMinutesMenu.get())
+
+        # Calculate starting time
+        if self.startAmPmMenu.get() == 'AM':
+            startTime = sH + (sM / 60)
+        else:  # PM
+            startTime = (sH + 12) + (sM / 60)
+
+        # Calculate ending time
+        if self.endAmPmMenu.get() == 'AM':
+            endTime = eH + (eM / 60)
+        else:  # PM
+            endTime = (eH + 12) + (eM / 60)
 
         # Clean our entries
         name = self.cleanText(name)
         code = self.cleanText(code).upper()
         credit = self.cleanText(credit)
-        # meeting = self.cleanText(meeting).upper()
         location = self.cleanText(location)
         section = self.cleanText(section)
         instructor = self.cleanText(instructor)
@@ -77,7 +98,8 @@ class MainWindow(ctk.CTk):
         notFound = True
 
         # Make sure all entry's are filled
-        if len(name) and len(code) and len(credit) and len(instructor) and len(section) and len(location):
+        if len(name) and len(code) and len(credit) and len(instructor) and len(section) and len(location) and \
+                sum(dayOfWeek):
             # Check if Course overlaps with previously saved courses
             database = self.db.all()
             # Is database empty?
@@ -86,19 +108,24 @@ class MainWindow(ctk.CTk):
                     # If we have a duplicate
                     if (courses['name'] == name and courses['number'] == code and courses['credit'] == credit
                             and courses['instructor'] == instructor and courses['location'] == location and
-                            courses['section'] == section):
+                            courses['section'] == section and notFound):
                         tkinter.messagebox.showwarning("Warning", "Course already exists!")
                         notFound = False
-                    # If we have a time conflict
-                    # elif courses['meeting'] == meeting:
-                    #     tkinter.messagebox.showwarning("Warning", f"Unable to add course, time conflict with "
-                    #                                               f"{courses['number']}: {courses['name']} at ")
-                    #
-                    #     notFound = False
+                    # If we have a time and classroom conflict
+                    elif courses['startTime'] <= endTime and startTime <= courses['endTime'] \
+                            and courses['location'] == location:
+                        tkinter.messagebox.showwarning("Warning", f"Unable to add course, due to time and classroom "
+                                                                  f"conflict with \n"
+                                                                  f"{courses['number']}: {courses['name']}-"
+                                                                  f"{courses['section']} in room "
+                                                                  f"{courses['location']}")
+
+                        notFound = False
                 # If there are no duplicates or time conflicts, save to database
                 if notFound:
                     # Save information to data base
                     course = {'number': code, 'name': name, 'section': section, 'credit': credit,
+                              'startTime':startTime, 'endTime':endTime, 'dayOfWeek':dayOfWeek,
                               'instructor': instructor, 'location': location}
                     self.db.insert(course)
                     print(self.db.all())
@@ -109,12 +136,31 @@ class MainWindow(ctk.CTk):
                     self.creditEntry.delete(0, ctk.END)
                     self.locationEntry.delete(0, ctk.END)
                     self.instructorEntry.delete(0, ctk.END)
+                    self.courseSectionEntry.delete(0, ctk.END)
+
+                    # reset check boxes
+                    self.checkBoxSunday.deselect()
+                    self.checkBoxMonday.deselect()
+                    self.checkBoxTuesday.deselect()
+                    self.checkBoxWednesday.deselect()
+                    self.checkBoxThursday.deselect()
+                    self.checkBoxFriday.deselect()
+                    self.checkBoxSaturday.deselect()
+
+                    # reset time option menu
+                    self.startHoursMenu.set("9")
+                    self.startMinutesMenu.set("00")
+                    self.startAmPmMenu.set("AM")
+                    self.endHoursMenu.set("10")
+                    self.endMinutesMenu.set("00")
+                    self.endAmPmMenu.set("AM")
 
 
             # Database is empty, add course
             else:
                 # Save information to data base
                 course = {'number': code, 'name': name, 'section': section, 'credit': credit,
+                          'startTime': startTime, 'endTime': endTime, 'dayOfWeek': dayOfWeek,
                           'instructor': instructor, 'location': location}
                 self.db.insert(course)
                 print(self.db.all())
@@ -127,14 +173,22 @@ class MainWindow(ctk.CTk):
                 self.instructorEntry.delete(0, ctk.END)
                 self.courseSectionEntry.delete(0, ctk.END)
 
-                # check boxes
-                # self.dayOfTheWeekCheckBoxSunday.delete(0, ctk.END)
-                # self.dayOfTheWeekCheckBoxMonday.delete(0, ctk.END)
-                # self.dayOfTheWeekCheckBoxTuesday.delete(0, ctk.END)
-                # self.dayOfTheWeekCheckBoxWednesday.delete(0, ctk.END)
-                # self.dayOfTheWeekCheckBoxThursday.delete(0, ctk.END)
-                # self.dayOfTheWeekCheckBoxFriday.delete(0, ctk.END)
-                # self.dayOfTheWeekCheckBoxSaturday.delete(0, ctk.END)
+                # reset check boxes
+                self.checkBoxSunday.deselect()
+                self.checkBoxMonday.deselect()
+                self.checkBoxTuesday.deselect()
+                self.checkBoxWednesday.deselect()
+                self.checkBoxThursday.deselect()
+                self.checkBoxFriday.deselect()
+                self.checkBoxSaturday.deselect()
+
+                # reset time option menu
+                self.startHoursMenu.set("9")
+                self.startMinutesMenu.set("00")
+                self.startAmPmMenu.set("AM")
+                self.endHoursMenu.set("10")
+                self.endMinutesMenu.set("00")
+                self.endAmPmMenu.set("AM")
 
         else:
             tkinter.messagebox.showwarning("Warning", "All course information must be filled out")
@@ -275,6 +329,7 @@ class MainWindow(ctk.CTk):
         # Start Hours
         self.startHoursMenu = ctk.CTkOptionMenu(self.startTimeFrame, width=20, values=["1", "2", "3", "4", "5", "6",
                                                                                        "7", "8", "9", "10", "11", "12"])
+        self.startHoursMenu.set("9")
         self.startHoursMenu.grid(row=0, column=1, padx=5, pady=5, sticky="EW")
         self.mainGuiElements.append(self.startHoursMenu)
 
@@ -308,6 +363,7 @@ class MainWindow(ctk.CTk):
         # End Hours
         self.endHoursMenu = ctk.CTkOptionMenu(self.endTimeFrame, width=20, values=["1", "2", "3", "4", "5", "6", "7",
                                                                                    "8", "9", "10", "11", "12"])
+        self.endHoursMenu.set("10")
         self.endHoursMenu.grid(row=0, column=1, padx=5, pady=5, sticky="EW")
         self.mainGuiElements.append(self.endHoursMenu)
 
