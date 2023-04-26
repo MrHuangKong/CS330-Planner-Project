@@ -406,6 +406,11 @@ class MainWindow(ctk.CTk):
                               [0, 0, 1, 0, 1, 1, 0], 14.0, 15.0)
         example.createUI()
 
+        # Read contents of database, and populate our scrollable frame courseInputFrame
+        example = CourseFrame(courseInputFrame, "Software Engineering", "CS330", "Dr. Feng", "Battelle 224", "3", "01",
+                              [0, 1, 0, 1, 0, 1, 0], 09.00, 9.75)
+        example.createUI()
+
     def weeklyGui(self):
         """
         Weekly Calendar view gui
