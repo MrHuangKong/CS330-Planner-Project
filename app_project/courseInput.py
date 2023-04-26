@@ -407,18 +407,13 @@ class MainWindow(ctk.CTk):
         self.weeklyViewFrame.grid(row=1, column=0)
         self.weeklyGuiElements.append(self.weeklyViewFrame)
 
-        # for i in range(0, 8):
-        #     Grid.rowconfigure(self.weeklyViewFrame, i, weight=1)
-        # for i in range(0, 20):
-        #     Grid.columnconfigure(self.weeklyViewFrame, i, weight=1)
-
         # Add our widgets (change stuff here, this is just test code)
         self.randomButton = ctk.CTkButton(self, text="Course Input", command=self.backToMain)
         self.randomButton.grid(row=0, column=0, padx=0)
         self.weeklyGuiElements.append(self.randomButton)
 
         # ---------------------------------------------------------------
-        #                         Labels
+        #                         Week Day Labels
         # ---------------------------------------------------------------
 
         # creating time labels
@@ -429,6 +424,10 @@ class MainWindow(ctk.CTk):
             dayLabel.grid(row=0, column=col, padx=25)
             self.weeklyGuiElements.append(dayLabel)
             col += 1
+
+        # ---------------------------------------------------------------
+        #                         Time Labels
+        # ---------------------------------------------------------------
 
         rowIndex = 1
         minHeight = 0
@@ -449,9 +448,11 @@ class MainWindow(ctk.CTk):
             minutesLabel = None
             if hour < 21:
                 for i in range(3):
-                    text = "|"
+                    # 15 min interval
+                    text = "-"
+                    # half hour interval
                     if i == 1:
-                        text = "30"
+                        text = "—"
                     minutesLabel = ctk.CTkLabel(self.weeklyViewFrame, text=text, height=1)
                     # starts minutes on the row after the hour row
                     minutesLabel.grid(row=rowIndex, column=0)
@@ -463,7 +464,7 @@ class MainWindow(ctk.CTk):
                         minHeight = minutesLabel.winfo_height()
 
         # ---------------------------------------------------------------
-        #                         Frames
+        #                         Course Frames
         # ---------------------------------------------------------------
         courses = self.getCourses()
         for course in courses:
