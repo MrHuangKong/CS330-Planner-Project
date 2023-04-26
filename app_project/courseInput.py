@@ -247,7 +247,6 @@ class MainWindow(ctk.CTk):
         addCourseButton.grid(row=5, column=2, padx=50, pady=5, sticky="EW")
         self.mainGuiElements.append(addCourseButton)  # Add to our list of elements so we can delete it
 
-
         # ---------------------------------------------------------------
         #                         Entry Fields
         # ---------------------------------------------------------------
