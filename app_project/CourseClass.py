@@ -63,7 +63,7 @@ class CourseFrame(ctk.CTk):
             self.containingFrame,
             width=500,
             height=50,
-            fg_color="#73726f")
+            fg_color=("#B7B7B7", "#73726f"))
         self.frame.pack(padx=10, pady=10)
 
         # adding course name to frame
