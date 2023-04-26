@@ -142,7 +142,7 @@ class MainWindow(ctk.CTk):
                 if notFound:
                     # Save information to data base
                     course = {'number': code, 'name': name, 'section': section, 'credit': credit,
-                              'startTime':startTime, 'endTime':endTime, 'dayOfWeek':dayOfWeek,
+                              'startTime': startTime, 'endTime':endTime, 'dayOfWeek':dayOfWeek,
                               'instructor': instructor, 'location': location}
                     self.db.insert(course)
                     #TODO: Remove or comment out, debugging purposes
