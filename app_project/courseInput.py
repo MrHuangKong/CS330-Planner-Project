@@ -464,14 +464,14 @@ class MainWindow(ctk.CTk):
             minutesLabel = None
             if hour < 21:
                 for i in range(3):
-                    # 15 min interval
+                    # 15 & 45 min intervals
                     text = "-"
-                    # half hour interval
+                    # 30 min interval
                     if i == 1:
                         text = "—"
-                    minutesLabel = ctk.CTkLabel(self.weeklyViewFrame, text=text, height=1)
+                    minutesLabel = ctk.CTkLabel(self.weeklyViewFrame, text=text, height=1, anchor="n")
                     # starts minutes on the row after the hour row
-                    minutesLabel.grid(row=rowIndex, column=0)
+                    minutesLabel.grid(row=rowIndex, column=0, padx=5, pady=(0, 0))
                     rowIndex += 1
                     self.weeklyGuiElements.append(minutesLabel)
                     # get the height of text
@@ -485,33 +485,37 @@ class MainWindow(ctk.CTk):
         courses = self.getCourses()
         for course in courses:
             startRow = int(((course["start"] - 7) / .25) + 1)
-            # TODO: may have to round span to the nearest quart hour
+            # Increases by 15 min intervals. Inbetween numbers will round down.
             span = int((course["end"] - course["start"]) / .25)
             for day in range(len(course["days"])):
                 if course["days"][day] == 1:
+                    # frame being placed on calendar
                     courseFrame = ctk.CTkFrame(self.weeklyViewFrame, width=60, height=(minHeight*span),
                                                fg_color="#04AA6D")
-                    courseFrame.grid(row=startRow, column=day+1, rowspan=span, padx=25)
+                    # TODO: is span+1 right? might be span
+                    courseFrame.grid(row=startRow, column=day+1, rowspan=span+1, padx=25)
                     self.weeklyGuiElements.append(courseFrame)
 
-                    CourseCodeLabel = ctk.CTkLabel(courseFrame, text=course["code"], wraplength=50, font=("Arial", 10))
+                    # text going over the courses frame
+                    codeText = f"{course['code']}-{course['section']}"
+                    CourseCodeLabel = ctk.CTkLabel(courseFrame, text=codeText, wraplength=50, font=("Arial", 10))
                     CourseCodeLabel.pack(expand=True, anchor=ctk.CENTER)
                     # locks the Frame size, so label does not take over the frame size
                     courseFrame.pack_propagate(False)
                     self.weeklyGuiElements.append(CourseCodeLabel)
 
     def getCourses(self) -> list:
-        courseInfo = {"code": "MS411", "start": 08.50, "end": 09.75, "days": [0, 1, 0, 1, 0, 0, 0]}
+        courseInfo = {"code": "MS411", "section": "01", "start": 08.50, "end": 9.75, "days": [0, 1, 0, 1, 0, 0, 0]}
         courses = [courseInfo]
-        courseInfo = {"code": "BIOL100", "start": 18.00, "end": 20.75, "days": [0, 0, 1, 0, 0, 0, 0]}
+        courseInfo = {"code": "BIOL100", "section": "02", "start": 18.00, "end": 20.75, "days": [0, 0, 1, 0, 0, 0, 0]}
         courses.append(courseInfo)
-        courseInfo = {"code": "BIOL100L", "start": 10.00, "end": 12.00, "days": [0, 0, 0, 0, 0, 1, 0]}
+        courseInfo = {"code": "BIOL100L", "section": "03", "start": 10.00, "end": 12.00, "days": [0, 0, 0, 0, 0, 1, 0]}
         courses.append(courseInfo)
-        courseInfo = {"code": "CS230", "start": 12.00, "end": 12.75, "days": [0, 1, 0, 1, 0, 1, 0]}
+        courseInfo = {"code": "CS230", "section": "01", "start": 12.00, "end": 12.75, "days": [0, 1, 0, 1, 0, 1, 0]}
         courses.append(courseInfo)
-        courseInfo = {"code": "CS478", "start": 11.00, "end": 12.25, "days": [0, 0, 1, 0, 1, 0, 0]}
+        courseInfo = {"code": "CS478", "section": "01", "start": 11.00, "end": 12.25, "days": [0, 0, 1, 0, 1, 0, 0]}
         courses.append(courseInfo)
-        courseInfo = {"code": "CS481", "start": 10.00, "end": 10.75, "days": [0, 1, 0, 0, 0, 0, 0]}
+        courseInfo = {"code": "CS481", "section": "01", "start": 10.00, "end": 10.75, "days": [0, 1, 0, 0, 0, 0, 0]}
         courses.append(courseInfo)
         return courses
 
