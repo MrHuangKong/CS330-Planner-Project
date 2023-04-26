@@ -66,7 +66,6 @@ class CourseFrame(ctk.CTk):
             fg_color="#73726f")
         self.frame.pack(padx=10, pady=10)
 
-
         # adding course name to frame
         self.courseNameLabel = ctk.CTkLabel(
             self.frame,
