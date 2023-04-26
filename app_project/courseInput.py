@@ -402,14 +402,15 @@ class MainWindow(ctk.CTk):
         self.mainGuiElements.append(self.endAmPmMenu)
 
         # Read contents of database, and populate our scrollable frame courseInputFrame
-        example = CourseFrame(courseInputFrame, "Parallel Computing", "CS381", "Dr. Reed", "Battelle", "3", "02",
-                              [0, 0, 1, 0, 1, 1, 0], 14.0, 15.0)
-        example.createUI()
+        database = self.db.all()
 
-        # Read contents of database, and populate our scrollable frame courseInputFrame
-        example = CourseFrame(courseInputFrame, "Software Engineering", "CS330", "Dr. Feng", "Battelle 224", "3", "01",
-                              [0, 1, 0, 1, 0, 1, 0], 09.00, 9.75)
-        example.createUI()
+        # Make sure database isn't empty
+        if len(database) != 0:
+            for courses in database:
+                courseFrame = CourseFrame(courseInputFrame, courses['name'], courses['number'], courses['instructor'],
+                                          courses['location'], courses['credit'], courses['section'],
+                                          courses['dayOfWeek'], courses['startTime'], courses['endTime'])
+                courseFrame.createUI()
 
     def weeklyGui(self):
         """
