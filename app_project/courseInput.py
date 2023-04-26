@@ -67,6 +67,7 @@ class MainWindow(ctk.CTk):
             else:  # No class day matches
                 pass
         return dayOverlap
+
     def saveCourse(self):
         """
         Save all course information into the database
@@ -144,6 +145,7 @@ class MainWindow(ctk.CTk):
                               'startTime':startTime, 'endTime':endTime, 'dayOfWeek':dayOfWeek,
                               'instructor': instructor, 'location': location}
                     self.db.insert(course)
+                    #TODO: Remove or comment out, debugging purposes
                     print(self.db.all())
 
                     # Clear our entries
@@ -171,7 +173,6 @@ class MainWindow(ctk.CTk):
                     self.endMinutesMenu.set("00")
                     self.endAmPmMenu.set("AM")
 
-
             # Database is empty, add course
             else:
                 # Save information to data base
@@ -179,6 +180,7 @@ class MainWindow(ctk.CTk):
                           'startTime': startTime, 'endTime': endTime, 'dayOfWeek': dayOfWeek,
                           'instructor': instructor, 'location': location}
                 self.db.insert(course)
+                # TODO: Remove or comment out, debugging purposes
                 print(self.db.all())
 
                 # Clear our entries
