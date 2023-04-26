@@ -121,7 +121,7 @@ class CourseFrame(ctk.CTk):
         self.deleteButton = ctk.CTkButton(
             self.frame,
             text="🗑",
-            width=30)
+            width=30, command=lambda: self.frame.destroy())
         self.deleteButton.grid(row=0, column=3, padx=5, pady=5)
 
         # adding edit button to frame
