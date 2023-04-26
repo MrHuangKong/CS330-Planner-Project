@@ -13,7 +13,7 @@ from tinydb import TinyDB, Query
 
 class CourseFrame(ctk.CTk):
 
-    def __int__(self, containingFrame, courseName: str, courseCode: str, instructorName: str, location: str, courseCredits: str,
+    def __init__(self, containingFrame, courseName: str, courseCode: str, instructorName: str, location: str, courseCredits: str,
                 sectionNumber: str, daysOfWeek: list, startTime: float, endTime: float):
         self.containingFrame = containingFrame
         self.courseName = courseName
@@ -73,7 +73,7 @@ class CourseFrame(ctk.CTk):
         self.courseNameLabel.grid(row=0, column=0, padx=10)
 
         # adding instructor name to frame
-        self.insrtuctorNameLabel = ctk.CTkLabel(
+        self.instructorNameLabel = ctk.CTkLabel(
             self.frame,
             text=self.instructorName)
         self.instructorNameLabel.grid(row=0, column=1, padx=10)
@@ -81,7 +81,7 @@ class CourseFrame(ctk.CTk):
         # adding credits to frame
         self.creditsLabel = ctk.CTkLabel(
             self.frame,
-            text=self.credits)
+            text=f"Credit(s): {self.credits}")
         self.creditsLabel.grid(row=0, column=2, padx=10)
 
         # adding course code to frame
@@ -113,7 +113,7 @@ class CourseFrame(ctk.CTk):
 
         # adding meeting time to frame
         self.meetingTimeLabel = ctk.CTkLabel(
-            self,
+            self.frame,
             text=startEndTime)
         self.meetingTimeLabel.grid(row=1, column=2, padx=10)
 
