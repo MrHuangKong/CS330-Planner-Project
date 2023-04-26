@@ -412,6 +412,7 @@ class MainWindow(ctk.CTk):
         self.windowMode = 2
 
         self.geometry("900x700")
+        self.title("Weekly View")
 
         # Specify Grid (Rows x Columns) for our buttons and labels
         # for i in range(0, 4):
@@ -540,8 +541,9 @@ class MainWindow(ctk.CTk):
         Removes elements on weekly calendar view to allow new elements to populate
         :return: None
         """
-        # reset window size
+        # reset window size & title
         self.geometry("700x450")
+        self.title("Course Scheduler")
 
         for element in self.weeklyGuiElements:
             element.grid_forget()
