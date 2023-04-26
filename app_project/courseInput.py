@@ -48,8 +48,25 @@ class MainWindow(ctk.CTk):
         # Clean user inputted strings
         for filter_ in filters:
             text = text.replace(f"{filter_}", "")
+        text = text.lstrip().rstrip()
         return text.title()
 
+    def checkDays(self, newDays: list, savedDays: list) -> bool:
+        """
+        Check if any of the new days overlap with our existing saved days in the database
+        :param newDays: List of days that a new course has
+        :param savedDays: List of days that a saved course has
+        :return: Return True if we have a days overlap, false if not
+        """
+        dayOverlap = False
+        for i in zip(newDays, savedDays):
+            # If we have a match for the days, return True
+            if  i[0] == i[1] and i[0] == 1:
+                dayOverlap = True
+                break
+            else:  # No class day matches
+                pass
+        return dayOverlap
     def saveCourse(self):
         """
         Save all course information into the database
@@ -106,14 +123,13 @@ class MainWindow(ctk.CTk):
             if len(database) != 0:
                 for courses in database:
                     # If we have a duplicate
-                    if (courses['name'] == name and courses['number'] == code and courses['credit'] == credit
-                            and courses['instructor'] == instructor and courses['location'] == location and
-                            courses['section'] == section and notFound):
+                    if courses['name'] == name and courses['number'] == code and courses['section'] == section and \
+                        notFound:
                         tkinter.messagebox.showwarning("Warning", "Course already exists!")
                         notFound = False
                     # If we have a time and classroom conflict
                     elif courses['startTime'] <= endTime and startTime <= courses['endTime'] \
-                            and courses['location'] == location:
+                            and self.checkDays(dayOfWeek, courses['dayOfWeek']) and courses['location'] == location:
                         tkinter.messagebox.showwarning("Warning", f"Unable to add course, due to time and classroom "
                                                                   f"conflict with \n"
                                                                   f"{courses['number']}: {courses['name']}-"
