@@ -15,6 +15,7 @@ class CourseFrame(ctk.CTk):
 
     def __init__(self, containingFrame, courseName: str, courseCode: str, instructorName: str, location: str, courseCredits: str,
                 sectionNumber: str, daysOfWeek: list, startTime: float, endTime: float):
+
         self.containingFrame = containingFrame
         self.courseName = courseName
         self.courseCode = courseCode
@@ -32,6 +33,8 @@ class CourseFrame(ctk.CTk):
         self.courseCodeLabel = None
         self.meetingTimeLabel = None
         self.daysOfWeekLabel = None
+        self.instructorLabel = None
+        self.sectionNumberLabel = None
         self.deleteButton = None
         self.editButton = None
 
@@ -70,25 +73,25 @@ class CourseFrame(ctk.CTk):
         self.courseNameLabel = ctk.CTkLabel(
             self.frame,
             text=self.courseName)
-        self.courseNameLabel.grid(row=0, column=0, padx=10)
+        self.courseNameLabel.grid(row=0, column=1, padx=10)
 
         # adding instructor name to frame
         self.instructorNameLabel = ctk.CTkLabel(
             self.frame,
-            text=self.instructorName)
-        self.instructorNameLabel.grid(row=0, column=1, padx=10)
+            text=f"Instructor: {self.instructorName}")
+        self.instructorNameLabel.grid(row=0, column=3, padx=10)
 
         # adding credits to frame
         self.creditsLabel = ctk.CTkLabel(
             self.frame,
             text=f"Credit(s): {self.credits}")
-        self.creditsLabel.grid(row=0, column=2, padx=10)
+        self.creditsLabel.grid(row=1, column=0, padx=10)
 
         # adding course code to frame
         self.courseCodeLabel = ctk.CTkLabel(
             self.frame,
             text=self.courseCode)
-        self.courseCodeLabel.grid(row=1, column=0, padx=10)
+        self.courseCodeLabel.grid(row=0, column=0, padx=10)
 
         # reading day of the week list and converting to a string
         daysInAWeek = ["S", "M", "T", "W", "Th", "F", "S"]
@@ -117,17 +120,29 @@ class CourseFrame(ctk.CTk):
             text=startEndTime)
         self.meetingTimeLabel.grid(row=1, column=2, padx=10)
 
+        # adding section number to frame
+        self.sectionNumberLabel = ctk.CTkLabel(
+            self.frame,
+            text=f"Section: {self.sectionNumber}")
+        self.sectionNumberLabel.grid(row=0, column=2, padx=5, pady=5)
+
+        # adding location to frame
+        self.instructorLabel = ctk.CTkLabel(
+            self.frame,
+            text=f"Room: {self.location}")
+        self.instructorLabel.grid(row=1, column=3, padx=10)
+
         # adding delete button to frame
         self.deleteButton = ctk.CTkButton(
             self.frame,
             text="🗑",
             width=30, command=lambda: self.frame.destroy())
-        self.deleteButton.grid(row=0, column=3, padx=5, pady=5)
+        self.deleteButton.grid(row=0, column=4, padx=5, pady=5)
 
         # adding edit button to frame
         self.editButton = ctk.CTkButton(
             self.frame,
             text="✎",
             width=30)
-        self.editButton.grid(row=1, column=3, padx=5, pady=5)
+        self.editButton.grid(row=1, column=4, padx=5, pady=5)
         
