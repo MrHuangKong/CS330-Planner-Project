@@ -145,6 +145,12 @@ class MainWindow(ctk.CTk):
                               'startTime': startTime, 'endTime':endTime, 'dayOfWeek':dayOfWeek,
                               'instructor': instructor, 'location': location}
                     self.db.insert(course)
+                    # Add course to our course view
+                    courseFrame = CourseFrame(self.courseInputFrame, name, code,
+                                              instructor,
+                                              location, credit, section,
+                                              dayOfWeek, startTime, endTime)
+                    courseFrame.createUI()
                     #TODO: Remove or comment out, debugging purposes
                     print(self.db.all())
 
@@ -180,6 +186,12 @@ class MainWindow(ctk.CTk):
                           'startTime': startTime, 'endTime': endTime, 'dayOfWeek': dayOfWeek,
                           'instructor': instructor, 'location': location}
                 self.db.insert(course)
+                # Add course to our course view
+                courseFrame = CourseFrame(self.courseInputFrame, name, code,
+                                          instructor,
+                                          location, credit, section,
+                                          dayOfWeek, startTime, endTime)
+                courseFrame.createUI()
                 # TODO: Remove or comment out, debugging purposes
                 print(self.db.all())
 
@@ -225,9 +237,9 @@ class MainWindow(ctk.CTk):
             Grid.columnconfigure(self, i, weight=1)
 
         # Create the scrollable frame so we can populate it with added courses
-        courseInputFrame = ctk.CTkScrollableFrame(self, width=400, height=200)
-        courseInputFrame.grid(row=1, column=0, columnspan=3, padx=30, pady=5, sticky="EW")
-        self.mainGuiElements.append(courseInputFrame)
+        self.courseInputFrame = ctk.CTkScrollableFrame(self, width=400, height=200)
+        self.courseInputFrame.grid(row=1, column=0, columnspan=3, padx=30, pady=5, sticky="EW")
+        self.mainGuiElements.append(self.courseInputFrame)
         # ---------------------------------------------------------------
         #                          Buttons
         # ---------------------------------------------------------------
@@ -407,7 +419,7 @@ class MainWindow(ctk.CTk):
         # Make sure database isn't empty
         if len(database) != 0:
             for courses in database:
-                courseFrame = CourseFrame(courseInputFrame, courses['name'], courses['number'], courses['instructor'],
+                courseFrame = CourseFrame(self.courseInputFrame, courses['name'], courses['number'], courses['instructor'],
                                           courses['location'], courses['credit'], courses['section'],
                                           courses['dayOfWeek'], courses['startTime'], courses['endTime'])
                 courseFrame.createUI()
