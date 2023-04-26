@@ -473,12 +473,14 @@ class MainWindow(ctk.CTk):
             span = int((course["end"] - course["start"]) / .25)
             for day in range(len(course["days"])):
                 if course["days"][day] == 1:
-                    courseFrame = ctk.CTkFrame(self.weeklyViewFrame, width=60, height=(minHeight*span), fg_color="#1F6AA5")
+                    courseFrame = ctk.CTkFrame(self.weeklyViewFrame, width=60, height=(minHeight*span),
+                                               fg_color="#04AA6D")
                     courseFrame.grid(row=startRow, column=day+1, rowspan=span, padx=25)
                     self.weeklyGuiElements.append(courseFrame)
 
-                    CourseCodeLabel = ctk.CTkLabel(courseFrame, text=course["code"])
+                    CourseCodeLabel = ctk.CTkLabel(courseFrame, text=course["code"], wraplength=50, font=("Arial", 10))
                     CourseCodeLabel.pack(expand=True, anchor=ctk.CENTER)
+                    # locks the Frame size, so label does not take over the frame size
                     courseFrame.pack_propagate(False)
                     self.weeklyGuiElements.append(CourseCodeLabel)
 
@@ -487,7 +489,7 @@ class MainWindow(ctk.CTk):
         courses = [courseInfo]
         courseInfo = {"code": "BIOL100", "start": 18.00, "end": 20.75, "days": [0, 0, 1, 0, 0, 0, 0]}
         courses.append(courseInfo)
-        courseInfo = {"code": "BIOL100l", "start": 10.00, "end": 12.00, "days": [0, 0, 0, 0, 0, 1, 0]}
+        courseInfo = {"code": "BIOL100L", "start": 10.00, "end": 12.00, "days": [0, 0, 0, 0, 0, 1, 0]}
         courses.append(courseInfo)
         courseInfo = {"code": "CS230", "start": 12.00, "end": 12.75, "days": [0, 1, 0, 1, 0, 1, 0]}
         courses.append(courseInfo)
