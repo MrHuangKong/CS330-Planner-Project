@@ -421,6 +421,7 @@ class MainWindow(ctk.CTk):
         #                         Labels
         # ---------------------------------------------------------------
 
+        # creating time labels
         daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
         col = 1
         for day in daysOfWeek:
@@ -429,10 +430,8 @@ class MainWindow(ctk.CTk):
             self.weeklyGuiElements.append(dayLabel)
             col += 1
 
-
         rowIndex = 1
         minHeight = 0
-        # creating time labels
         for hour in range(7, 22):
             printHour = hour
             hourRowIndex = hour - 6
@@ -466,17 +465,36 @@ class MainWindow(ctk.CTk):
         # ---------------------------------------------------------------
         #                         Frames
         # ---------------------------------------------------------------
+        courses = self.getCourses()
+        for course in courses:
+            startRow = int(((course["start"] - 7) / .25) + 1)
+            # TODO: may have to round span to the nearest quart hour
+            span = int((course["end"] - course["start"]) / .25)
+            for day in range(len(course["days"])):
+                if course["days"][day] == 1:
+                    courseFrame = ctk.CTkFrame(self.weeklyViewFrame, width=60, height=(minHeight*span), fg_color="#1F6AA5")
+                    courseFrame.grid(row=startRow, column=day+1, rowspan=span, padx=25)
+                    self.weeklyGuiElements.append(courseFrame)
 
-        self.cs330Frame = ctk.CTkFrame(self.weeklyViewFrame, width=60, height=(minHeight*3), fg_color="#73726f")
-        self.cs330Frame.grid(row=1, column=1, rowspan=3, padx=25)
-        self.weeklyGuiElements.append(self.cs330Frame)
+                    CourseCodeLabel = ctk.CTkLabel(courseFrame, text=course["code"])
+                    CourseCodeLabel.pack(expand=True, anchor=ctk.CENTER)
+                    courseFrame.pack_propagate(False)
+                    self.weeklyGuiElements.append(CourseCodeLabel)
 
-        self.cs330Label = ctk.CTkLabel(self.cs330Frame, text="CS330")
-        self.cs330Label.pack(expand=True, anchor=ctk.CENTER)
-        self.cs330Frame.pack_propagate(False)
-        self.weeklyGuiElements.append(self.cs330Label)
-
-
+    def getCourses(self) -> list:
+        courseInfo = {"code": "MS411", "start": 08.50, "end": 09.75, "days": [0, 1, 0, 1, 0, 0, 0]}
+        courses = [courseInfo]
+        courseInfo = {"code": "BIOL100", "start": 18.00, "end": 20.75, "days": [0, 0, 1, 0, 0, 0, 0]}
+        courses.append(courseInfo)
+        courseInfo = {"code": "BIOL100l", "start": 10.00, "end": 12.00, "days": [0, 0, 0, 0, 0, 1, 0]}
+        courses.append(courseInfo)
+        courseInfo = {"code": "CS230", "start": 12.00, "end": 12.75, "days": [0, 1, 0, 1, 0, 1, 0]}
+        courses.append(courseInfo)
+        courseInfo = {"code": "CS478", "start": 11.00, "end": 12.25, "days": [0, 0, 1, 0, 1, 0, 0]}
+        courses.append(courseInfo)
+        courseInfo = {"code": "CS481", "start": 10.00, "end": 10.75, "days": [0, 1, 0, 0, 0, 0, 0]}
+        courses.append(courseInfo)
+        return courses
 
     def removeMainGui(self):
         """
@@ -527,7 +545,7 @@ class MainWindow(ctk.CTk):
 
         # Return to the main gui
         self.courseInputGUI()
-        
+
 
 def main():
     app = MainWindow()
