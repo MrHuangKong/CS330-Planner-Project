@@ -395,10 +395,88 @@ class MainWindow(ctk.CTk):
         # Set our window mode to weekly view
         self.windowMode = 2
 
+        self.geometry("900x700")
+
+        # Specify Grid (Rows x Columns) for our buttons and labels
+        # for i in range(0, 4):
+        #     Grid.rowconfigure(self, i, weight=1)
+        #     Grid.columnconfigure(self, i, weight=1)
+
+        # Frame for weekly calendar view
+        self.weeklyViewFrame = ctk.CTkScrollableFrame(self, width=800, height=600)
+        self.weeklyViewFrame.grid(row=1, column=0)
+        self.weeklyGuiElements.append(self.weeklyViewFrame)
+
+        # for i in range(0, 8):
+        #     Grid.rowconfigure(self.weeklyViewFrame, i, weight=1)
+        # for i in range(0, 20):
+        #     Grid.columnconfigure(self.weeklyViewFrame, i, weight=1)
+
         # Add our widgets (change stuff here, this is just test code)
-        randomButton = ctk.CTkButton(self, text="Course Input", command=self.backToMain)
-        randomButton.grid(row=2, column=2)
-        self.weeklyGuiElements.append(randomButton)
+        self.randomButton = ctk.CTkButton(self, text="Course Input", command=self.backToMain)
+        self.randomButton.grid(row=0, column=0, padx=0)
+        self.weeklyGuiElements.append(self.randomButton)
+
+        # ---------------------------------------------------------------
+        #                         Labels
+        # ---------------------------------------------------------------
+
+        daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+        col = 1
+        for day in daysOfWeek:
+            dayLabel = ctk.CTkLabel(self.weeklyViewFrame, text=day)
+            dayLabel.grid(row=0, column=col, padx=25)
+            self.weeklyGuiElements.append(dayLabel)
+            col += 1
+
+
+        rowIndex = 1
+        minHeight = 0
+        # creating time labels
+        for hour in range(7, 22):
+            printHour = hour
+            hourRowIndex = hour - 6
+            pm = "AM"
+            if printHour > 11:
+                pm = "PM"
+            if printHour > 12:
+                printHour -= 12
+            hourText = f"{printHour}:00 {pm}"
+            timeLabel = ctk.CTkLabel(self.weeklyViewFrame, text=hourText, height=1, anchor="n")
+            timeLabel.grid(row=rowIndex, column=0, padx=5, pady=(0, 0))
+            rowIndex += 1
+            self.weeklyGuiElements.append(timeLabel)
+
+            minutesLabel = None
+            if hour < 21:
+                for i in range(3):
+                    text = "|"
+                    if i == 1:
+                        text = "30"
+                    minutesLabel = ctk.CTkLabel(self.weeklyViewFrame, text=text, height=1)
+                    # starts minutes on the row after the hour row
+                    minutesLabel.grid(row=rowIndex, column=0)
+                    rowIndex += 1
+                    self.weeklyGuiElements.append(minutesLabel)
+                    # get the height of text
+                    if minHeight == 0:
+                        minutesLabel.update()
+                        minHeight = minutesLabel.winfo_height()
+
+        # ---------------------------------------------------------------
+        #                         Frames
+        # ---------------------------------------------------------------
+
+        self.cs330Frame = ctk.CTkFrame(self.weeklyViewFrame, width=60, height=(minHeight*3), fg_color="#73726f")
+        self.cs330Frame.grid(row=1, column=1, rowspan=3, padx=25)
+        self.weeklyGuiElements.append(self.cs330Frame)
+
+        self.cs330Label = ctk.CTkLabel(self.cs330Frame, text="CS330")
+        self.cs330Label.pack(expand=True, anchor=ctk.CENTER)
+        self.cs330Frame.pack_propagate(False)
+        self.weeklyGuiElements.append(self.cs330Label)
+
+
 
     def removeMainGui(self):
         """
@@ -421,6 +499,9 @@ class MainWindow(ctk.CTk):
         Removes elements on weekly calendar view to allow new elements to populate
         :return: None
         """
+        # reset window size
+        self.geometry("700x450")
+
         for element in self.weeklyGuiElements:
             element.grid_forget()
 
@@ -446,8 +527,7 @@ class MainWindow(ctk.CTk):
 
         # Return to the main gui
         self.courseInputGUI()
-
-
+        
 
 def main():
     app = MainWindow()
