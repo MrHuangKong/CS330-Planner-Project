@@ -5,10 +5,10 @@
 
 import tkinter
 import tkinter.messagebox
-
-import customtkinter as ctk
 from tkinter import *
+import customtkinter as ctk
 from tinydb import TinyDB, Query
+from CourseClass import CourseFrame
 
 
 class MainWindow(ctk.CTk):
@@ -401,6 +401,11 @@ class MainWindow(ctk.CTk):
         self.endAmPmMenu = ctk.CTkOptionMenu(self.endTimeFrame, width=20, values=["AM", "PM"])
         self.endAmPmMenu.grid(row=0, column=4, padx=5, pady=5, sticky="EW")
         self.mainGuiElements.append(self.endAmPmMenu)
+
+        # Read contents of database, and populate our scrollable frame courseInputFrame
+        example = CourseFrame(courseInputFrame, "Parallel Computing", "CS381", "Dr. Reed", "Battelle", "3", "02",
+                              [0, 0, 1, 0, 1, 1, 0], 14.0, 15.0)
+        example.createUI()
 
     def weeklyGui(self):
         """
