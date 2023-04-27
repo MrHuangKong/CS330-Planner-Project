@@ -554,16 +554,16 @@ class MainWindow(ctk.CTk):
         :return: None
         """
         # TODO: When generating the CourseClass objects, add the following two lines so the user can't edit or delete
-        # the list
+
         self.removeMainGui()
         # Set window mode to main gui
         self.windowMode = 1
+        self.title("Course List")
 
         # ---------------------------------------------------------------
         #                         Buttons
         # ---------------------------------------------------------------
 
-        # Add our widgets (change stuff here, this is just test code)
         self.courseInputButton = ctk.CTkButton(self, text="Course Input", command=self.backToMain)
         self.courseInputButton.grid(row=0, column=0)
         self.listGuiElements.append(self.courseInputButton)
@@ -641,6 +641,9 @@ class MainWindow(ctk.CTk):
         Removes elements on course list to allow new elements to populate
         :return: None
         """
+        # reset window title
+        self.title("Course Scheduler")
+
         for element in self.listGuiElements:
             element.grid_forget()
 
