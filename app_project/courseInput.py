@@ -529,6 +529,18 @@ class MainWindow(ctk.CTk):
                     courseFrame.pack_propagate(False)
                     self.weeklyGuiElements.append(CourseCodeLabel)
 
+    def listGUI(self):
+        """
+        Course list GUI
+        :return: None
+        """
+        #TODO: When generating the CourseClass objects, add the following two lines so the user can't edit or delete
+        # the list
+
+        # courseFrame.deleteButton.grid_forget()
+        # courseFrame.editButton.grid_forget()
+        pass # Delete this once implemented
+
     def getCourses(self) -> list:
         courseInfo = {"code": "MS411", "section": "01", "start": 08.50, "end": 9.75, "days": [0, 1, 0, 1, 0, 0, 0]}
         courses = [courseInfo]
