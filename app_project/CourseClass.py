@@ -154,7 +154,12 @@ class CourseFrame(ctk.CTk):
         self.editButton = ctk.CTkButton(
             self.frame,
             text="✎",
-            width=30)
+            font=("Arial", 10),
+            text_color=("#000000", "#f2f2f2"),
+            width=30,
+            border_width=1,
+            border_color=("#cccccc", "#9b9a97"),
+            fg_color=("#DBDBDB", "#8f8d8a"))
         self.editButton.grid(row=1, column=4, padx=5, pady=5)
 
     def deleteEntryDB(self):
