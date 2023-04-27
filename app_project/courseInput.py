@@ -149,7 +149,7 @@ class MainWindow(ctk.CTk):
                     courseFrame = CourseFrame(self.courseInputFrame, name, code,
                                               instructor,
                                               location, credit, section,
-                                              dayOfWeek, startTime, endTime)
+                                              dayOfWeek, startTime, endTime, self.db)
                     courseFrame.createUI()
                     #TODO: Remove or comment out, debugging purposes
                     print(self.db.all())
@@ -190,7 +190,7 @@ class MainWindow(ctk.CTk):
                 courseFrame = CourseFrame(self.courseInputFrame, name, code,
                                           instructor,
                                           location, credit, section,
-                                          dayOfWeek, startTime, endTime)
+                                          dayOfWeek, startTime, endTime, self.db)
                 courseFrame.createUI()
                 # TODO: Remove or comment out, debugging purposes
                 print(self.db.all())
@@ -263,35 +263,35 @@ class MainWindow(ctk.CTk):
         #                         Entry Fields
         # ---------------------------------------------------------------
 
-        # Course name
-        self.courseEntry = ctk.CTkEntry(self, placeholder_text="Course Name*")
-        self.courseEntry.grid(row=2, column=0, padx=5, pady=5, sticky="EW")
-        self.mainGuiElements.append(self.courseEntry)
-
         # Course code entry
         self.codeEntry = ctk.CTkEntry(self, placeholder_text="Course Code*")
-        self.codeEntry.grid(row=2, column=1, padx=5, pady=5, sticky="EW")
+        self.codeEntry.grid(row=2, column=0, padx=5, pady=5, sticky="EW")
         self.mainGuiElements.append(self.codeEntry)
+
+        # Course name
+        self.courseEntry = ctk.CTkEntry(self, placeholder_text="Course Name*")
+        self.courseEntry.grid(row=2, column=1, padx=5, pady=5, sticky="EW")
+        self.mainGuiElements.append(self.courseEntry)
+
+        # Course Section number
+        self.courseSectionEntry = ctk.CTkEntry(self, placeholder_text="Section Number*")
+        self.courseSectionEntry.grid(row=2, column=2, padx=5, pady=5, sticky="EW")
+        self.mainGuiElements.append(self.courseSectionEntry)
 
         # Course Credit
         self.creditEntry = ctk.CTkEntry(self, placeholder_text="Credit(s)*")
-        self.creditEntry.grid(row=3, column=1, padx=5, pady=5, sticky="EW")
+        self.creditEntry.grid(row=3, column=0, padx=5, pady=5, sticky="EW")
         self.mainGuiElements.append(self.creditEntry)
 
         # Course meeting Location
         self.locationEntry = ctk.CTkEntry(self, placeholder_text="Location*")
-        self.locationEntry.grid(row=3, column=0, padx=5, pady=5, sticky="EW")
+        self.locationEntry.grid(row=3, column=1, padx=5, pady=5, sticky="EW")
         self.mainGuiElements.append(self.locationEntry)
 
         # Course Instructor name
         self.instructorEntry = ctk.CTkEntry(self, placeholder_text="Instructor Name*")
-        self.instructorEntry.grid(row=2, column=2, padx=5, pady=5, sticky="EW")
+        self.instructorEntry.grid(row=3, column=2, padx=5, pady=5, sticky="EW")
         self.mainGuiElements.append(self.instructorEntry)
-
-        # Course Section number
-        self.courseSectionEntry = ctk.CTkEntry(self, placeholder_text="Section Number*")
-        self.courseSectionEntry.grid(row=3, column=2, padx=5, pady=5, sticky="EW")
-        self.mainGuiElements.append(self.courseSectionEntry)
 
         # ---------------------------------------------------------------
         #                         Check Box
@@ -416,12 +416,12 @@ class MainWindow(ctk.CTk):
         # Read contents of database, and populate our scrollable frame courseInputFrame
         database = self.db.all()
 
-        # Make sure database isn't empty
+        # Make sure database isn't empty while we generate CourseClass objects
         if len(database) != 0:
             for courses in database:
                 courseFrame = CourseFrame(self.courseInputFrame, courses['name'], courses['number'], courses['instructor'],
                                           courses['location'], courses['credit'], courses['section'],
-                                          courses['dayOfWeek'], courses['startTime'], courses['endTime'])
+                                          courses['dayOfWeek'], courses['startTime'], courses['endTime'], self.db)
                 courseFrame.createUI()
 
     def weeklyGui(self):

@@ -8,13 +8,13 @@ import tkinter.messagebox
 
 import customtkinter as ctk
 from tkinter import *
-from tinydb import TinyDB, Query
+from tinydb import TinyDB, Query, where
 
 
 class CourseFrame(ctk.CTk):
 
     def __init__(self, containingFrame, courseName: str, courseCode: str, instructorName: str, location: str, courseCredits: str,
-                sectionNumber: str, daysOfWeek: list, startTime: float, endTime: float):
+                sectionNumber: str, daysOfWeek: list, startTime: float, endTime: float, database: TinyDB):
 
         self.containingFrame = containingFrame
         self.courseName = courseName
@@ -37,6 +37,9 @@ class CourseFrame(ctk.CTk):
         self.sectionNumberLabel = None
         self.deleteButton = None
         self.editButton = None
+
+        # Point to the database to allow deleting and modifying
+        self.database = database
 
     def decimalTimeToStardardTime(self, decimalTime: float) -> str:
         """
@@ -136,7 +139,7 @@ class CourseFrame(ctk.CTk):
         self.deleteButton = ctk.CTkButton(
             self.frame,
             text="🗑",
-            width=30, command=lambda: self.frame.destroy())
+            width=30, command=self.deleteEntryDB)
         self.deleteButton.grid(row=0, column=4, padx=5, pady=5)
 
         # adding edit button to frame
@@ -145,4 +148,18 @@ class CourseFrame(ctk.CTk):
             text="✎",
             width=30)
         self.editButton.grid(row=1, column=4, padx=5, pady=5)
-        
+
+    def deleteEntryDB(self):
+        """
+        Deletes the course from GUI and Database
+        :return:
+        """
+        # Create a query instance when called
+        grep = Query()
+
+        # Find the match in the database, and delete it
+        self.database.remove((grep.number == self.courseCode) & (grep.name == self.courseName)
+                             & (grep.section == self.sectionNumber))
+
+        # Remove from parent frame to show user deleted the course
+        self.frame.destroy()
