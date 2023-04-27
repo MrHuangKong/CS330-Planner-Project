@@ -138,8 +138,14 @@ class CourseFrame(ctk.CTk):
         # adding delete button to frame
         self.deleteButton = ctk.CTkButton(
             self.frame,
-            text="🗑",
-            width=30, command=self.deleteEntryDB)
+            text="❌",
+            font=("Arial", 10),
+            text_color=("#000000", "#f2f2f2"),
+            width=30,
+            border_width=1,
+            border_color=("#cccccc", "#9b9a97"),
+            fg_color=("#DBDBDB", "#8f8d8a"),
+            command=self.deleteEntryDB)
         self.deleteButton.grid(row=0, column=4, padx=5, pady=5)
 
         # Commenting the below out, and placing it inside our courseInput to allow callback database values
