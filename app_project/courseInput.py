@@ -68,6 +68,9 @@ class MainWindow(ctk.CTk):
                 pass
         return dayOverlap
 
+    def editCourse(self):
+        pass
+
     def saveCourse(self):
         """
         Save all course information into the database
@@ -118,6 +121,14 @@ class MainWindow(ctk.CTk):
         # Make sure all entry's are filled
         if len(name) and len(code) and len(credit) and len(instructor) and len(section) and len(location) and \
                 sum(dayOfWeek):
+            # Check if start time and end time isn't too long
+            if abs(startTime - endTime) > 3.0:
+                checkUser = tkinter.messagebox.askquestion("Warning", "Class duration seems too long, add anyways?",
+                                                           icon="warning")
+            #  Cancel adding the class
+            if checkUser == 'no':
+                return
+
             # Check if Course overlaps with previously saved courses
             database = self.db.all()
             # Is database empty?
@@ -413,6 +424,10 @@ class MainWindow(ctk.CTk):
         self.endAmPmMenu.grid(row=0, column=4, padx=5, pady=5, sticky="EW")
         self.mainGuiElements.append(self.endAmPmMenu)
 
+        # ---------------------------------------------------------------
+        #                         Generate Saved Courses
+        # ---------------------------------------------------------------
+
         # Read contents of database, and populate our scrollable frame courseInputFrame
         database = self.db.all()
 
@@ -423,6 +438,11 @@ class MainWindow(ctk.CTk):
                                           courses['location'], courses['credit'], courses['section'],
                                           courses['dayOfWeek'], courses['startTime'], courses['endTime'], self.db)
                 courseFrame.createUI()
+                courseFrame.editButton = ctk.CTkButton(
+                    courseFrame.frame,
+                    text="✎",
+                    width=30)
+                courseFrame.editButton.grid(row=1, column=4, padx=5, pady=5)
 
     def weeklyGui(self):
         """
