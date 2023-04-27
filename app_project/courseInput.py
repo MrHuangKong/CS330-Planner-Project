@@ -517,20 +517,35 @@ class MainWindow(ctk.CTk):
                     courseFrame.pack_propagate(False)
                     self.weeklyGuiElements.append(CourseCodeLabel)
 
+
     def getCourses(self) -> list:
-        courseInfo = {"code": "MS411", "section": "01", "start": 08.50, "end": 9.75, "days": [0, 1, 0, 1, 0, 0, 0]}
-        courses = [courseInfo]
-        courseInfo = {"code": "BIOL100", "section": "02", "start": 18.00, "end": 20.75, "days": [0, 0, 1, 0, 0, 0, 0]}
-        courses.append(courseInfo)
-        courseInfo = {"code": "BIOL100L", "section": "03", "start": 10.00, "end": 12.00, "days": [0, 0, 0, 0, 0, 1, 0]}
-        courses.append(courseInfo)
-        courseInfo = {"code": "CS230", "section": "01", "start": 12.00, "end": 12.75, "days": [0, 1, 0, 1, 0, 1, 0]}
-        courses.append(courseInfo)
-        courseInfo = {"code": "CS478", "section": "01", "start": 11.00, "end": 12.25, "days": [0, 0, 1, 0, 1, 0, 0]}
-        courses.append(courseInfo)
-        courseInfo = {"code": "CS481", "section": "01", "start": 10.00, "end": 10.75, "days": [0, 1, 0, 0, 0, 0, 0]}
-        courses.append(courseInfo)
-        return courses
+
+        # Read contents of database, and populate our scrollable frame courseInputFrame
+        database = self.db.all()
+
+        coursesList = []
+
+        if len(database) != 0:
+            for courses in database:
+                courseInfo = {"code": courses['number'], "section": courses['section'], "start": courses['startTime'],
+                              "end": courses['endTime'], "days": courses['dayOfWeek']}
+                coursesList.append(courseInfo)
+                # courseFrame = CourseFrame(courseInputFrame, courses['name'], courses['number'], courses['instructor'],
+                #                           courses['location'], courses['credit'], courses['section'],
+                #                           courses['dayOfWeek'], courses['startTime'], courses['endTime'])
+        # courseInfo = {"code": "MS411", "section": "01", "start": 08.50, "end": 9.75, "days": [0, 1, 0, 1, 0, 0, 0]}
+        # courses = [courseInfo]
+        # courseInfo = {"code": "BIOL100", "section": "02", "start": 18.00, "end": 20.75, "days": [0, 0, 1, 0, 0, 0, 0]}
+        # courses.append(courseInfo)
+        # courseInfo = {"code": "BIOL100L", "section": "03", "start": 10.00, "end": 12.00, "days": [0, 0, 0, 0, 0, 1, 0]}
+        # courses.append(courseInfo)
+        # courseInfo = {"code": "CS230", "section": "01", "start": 12.00, "end": 12.75, "days": [0, 1, 0, 1, 0, 1, 0]}
+        # courses.append(courseInfo)
+        # courseInfo = {"code": "CS478", "section": "01", "start": 11.00, "end": 12.25, "days": [0, 0, 1, 0, 1, 0, 0]}
+        # courses.append(courseInfo)
+        # courseInfo = {"code": "CS481", "section": "01", "start": 10.00, "end": 10.75, "days": [0, 1, 0, 0, 0, 0, 0]}
+        # courses.append(courseInfo)
+        return coursesList
 
     def removeMainGui(self):
         """
