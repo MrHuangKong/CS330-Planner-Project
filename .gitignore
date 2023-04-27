@@ -13,3 +13,4 @@ app_project/.idea/workspace.xml
 .idea/modules.xml
 .idea/vcs.xml
 .idea/CS330-Planner-Project.iml
+*.pyc
