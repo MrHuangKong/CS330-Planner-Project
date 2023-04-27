@@ -159,8 +159,75 @@ class CourseFrame(ctk.CTk):
             width=30,
             border_width=1,
             border_color=("#cccccc", "#9b9a97"),
-            fg_color=("#DBDBDB", "#8f8d8a"))
+            fg_color=("#DBDBDB", "#8f8d8a"),
+            command=self.editEntryDB)
         self.editButton.grid(row=1, column=4, padx=5, pady=5)
+
+    def editEntryDB(self):
+        # Set root into edit mode
+        self.root.editMode = True
+
+        # Find the match in the database, and store it into self.docID
+        grep = Query()
+        id = self.database.get((grep.number == self.courseCode) & (grep.name == self.courseName)
+                             & (grep.section == self.sectionNumber))
+        self.root.docID = id
+
+        # Populate entries with whats stored in frame
+        # Course Code
+        self.root.codeEntry.delete(0, ctk.END)
+        self.root.codeEntry.insert(0, f"{self.courseCode}")
+        # Course Name
+        self.root.courseEntry.delete(0, ctk.END)
+        self.root.courseEntry.insert(0, f"{self.courseName}")
+        # Section Number
+        self.root.courseSectionEntry.delete(0, ctk.END)
+        self.root.courseSectionEntry.insert(0, f"{self.sectionNumber}")
+        # Credits
+        self.root.creditEntry.delete(0, ctk.END)
+        self.root.creditEntry.insert(0, f"{self.credits}")
+        # Location
+        self.root.locationEntry.delete(0, ctk.END)
+        self.root.locationEntry.insert(0, f"{self.location}")
+        # Instructor Name
+        self.root.instructorEntry.delete(0, ctk.END)
+        self.root.instructorEntry.insert(0, f"{self.instructorName}")
+
+        # Days of Week
+        self.root.checkBoxSunday.deselect()
+        if self.daysOfWeek[0]:
+            self.root.checkBoxSunday.select()
+        self.root.checkBoxMonday.deselect()
+        if self.daysOfWeek[1]:
+            self.root.checkBoxMonday.select()
+        self.root.checkBoxTuesday.deselect()
+        if self.daysOfWeek[2]:
+            self.root.checkBoxTuesday.select()
+        self.root.checkBoxWednesday.deselect()
+        if self.daysOfWeek[3]:
+            self.root.checkBoxWednesday.select()
+        self.root.checkBoxThursday.deselect()
+        if self.daysOfWeek[4]:
+            self.root.checkBoxThursday.select()
+        self.root.checkBoxFriday.deselect()
+        if self.daysOfWeek[5]:
+            self.root.checkBoxFriday.select()
+        self.root.checkBoxSaturday.deselect()
+        if self.daysOfWeek[6]:
+            self.root.checkBoxSaturday.select()
+
+        # Start time
+        s = self.decimalTimeToStardardTime(self.startTime)
+        self.root.startHoursMenu.set(f"{s[:2]}")
+        self.root.startMinutesMenu.set(f"{s[3:5]}")
+        self.root.startAmPmMenu.set(f"{s[6:]}")
+
+        # End time
+        e = self.decimalTimeToStardardTime(self.endTime)
+        self.root.endHoursMenu.set(f"{e[:2]}")
+        self.root.endMinutesMenu.set(f"{e[3:5]}")
+        self.root.endAmPmMenu.set(f"{e[6:]}")
+
 
     def deleteEntryDB(self):
         """

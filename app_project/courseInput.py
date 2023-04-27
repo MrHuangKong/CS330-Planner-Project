@@ -34,6 +34,9 @@ class MainWindow(ctk.CTk):
         # Keep track if we're in edit mode
         self.editMode = False
 
+        # Keep track of what entity we're editing in the database
+        self.docID = None
+
     def __del__(self):
         # Close the database
         self.db.close()
@@ -70,9 +73,6 @@ class MainWindow(ctk.CTk):
             else:  # No class day matches
                 pass
         return dayOverlap
-
-    def editCourse(self):
-        pass
 
     def saveCourse(self):
         """
@@ -121,51 +121,104 @@ class MainWindow(ctk.CTk):
         # Create a state to break out of our loop
         notFound = True
 
-        # Make sure all entry's are filled
-        if len(name) and len(code) and len(credit) and len(instructor) and len(section) and len(location) and \
-                sum(dayOfWeek):
-            # Check if start time and end time isn't too long
-            if abs(startTime - endTime) > 3.0:
-                checkUser = tkinter.messagebox.askquestion("Warning", "Class duration seems too long, add anyways?",
-                                                           icon="warning")
-            #  Cancel adding the class
-            if checkUser == 'no':
-                return
+        # User is editing a course
+        if self.editMode:
+            # Update the Database
+            self.db.update({'number': code, 'name': name, 'section': section, 'credit': credit,
+                                  'startTime': startTime, 'endTime':endTime, 'dayOfWeek':dayOfWeek,
+                                  'instructor': instructor, 'location': location}, doc_ids=[self.docID.doc_id])
+            # Refresh the frame with the CourseClass objects
+            self.backToMain()
 
-            # Check if Course overlaps with previously saved courses
-            database = self.db.all()
-            # Is database empty?
-            if len(database) != 0:
-                for courses in database:
-                    # If we have a duplicate
-                    if courses['name'] == name and courses['number'] == code and courses['section'] == section and \
-                        notFound:
-                        tkinter.messagebox.showwarning("Warning", "Course already exists!")
-                        notFound = False
-                    # If we have a time and classroom conflict
-                    elif courses['startTime'] <= endTime and startTime <= courses['endTime'] \
-                            and self.checkDays(dayOfWeek, courses['dayOfWeek']) and courses['location'] == location:
-                        tkinter.messagebox.showwarning("Warning", f"Unable to add course, due to time and classroom "
-                                                                  f"conflict with \n"
-                                                                  f"{courses['number']}: {courses['name']}-"
-                                                                  f"{courses['section']} in room "
-                                                                  f"{courses['location']}")
+            self.editMode = False
+        # User isn't editing a course
+        else:
+            # Make sure all entry's are filled
+            if len(name) and len(code) and len(credit) and len(instructor) and len(section) and len(location) and \
+                    sum(dayOfWeek):
+                # Check if start time and end time isn't too long
+                if abs(startTime - endTime) > 3.0:
+                    checkUser = tkinter.messagebox.askquestion("Warning", "Class duration seems too long, add anyways?",
+                                                               icon="warning")
+                #  Cancel adding the class
+                if checkUser == 'no':
+                    return
 
-                        notFound = False
-                # If there are no duplicates or time conflicts, save to database
-                if notFound:
+                # Check if Course overlaps with previously saved courses
+                database = self.db.all()
+                # Is database empty?
+                if len(database) != 0:
+                    for courses in database:
+                        # If we have a duplicate
+                        if courses['name'] == name and courses['number'] == code and courses['section'] == section and \
+                            notFound:
+                            tkinter.messagebox.showwarning("Warning", "Course already exists!")
+                            notFound = False
+                        # If we have a time and classroom conflict
+                        elif courses['startTime'] <= endTime and startTime <= courses['endTime'] \
+                                and self.checkDays(dayOfWeek, courses['dayOfWeek']) and courses['location'] == location:
+                            tkinter.messagebox.showwarning("Warning", f"Unable to add course, due to time and classroom "
+                                                                      f"conflict with \n"
+                                                                      f"{courses['number']}: {courses['name']}-"
+                                                                      f"{courses['section']} in room "
+                                                                      f"{courses['location']}")
+
+                            notFound = False
+                    # If there are no duplicates or time conflicts, save to database
+                    if notFound:
+                        # Save information to data base
+                        course = {'number': code, 'name': name, 'section': section, 'credit': credit,
+                                  'startTime': startTime, 'endTime':endTime, 'dayOfWeek':dayOfWeek,
+                                  'instructor': instructor, 'location': location}
+                        self.db.insert(course)
+                        # Add course to our course view
+                        courseFrame = CourseFrame(self, self.courseInputFrame, name, code,
+                                                  instructor,
+                                                  location, credit, section,
+                                                  dayOfWeek, startTime, endTime, self.db)
+                        courseFrame.createUI()
+                        #TODO: Remove or comment out, debugging purposes
+                        print(self.db.all())
+
+                        # Clear our entries
+                        self.courseEntry.delete(0, ctk.END)
+                        self.codeEntry.delete(0, ctk.END)
+                        self.creditEntry.delete(0, ctk.END)
+                        self.locationEntry.delete(0, ctk.END)
+                        self.instructorEntry.delete(0, ctk.END)
+                        self.courseSectionEntry.delete(0, ctk.END)
+
+                        # reset check boxes
+                        self.checkBoxSunday.deselect()
+                        self.checkBoxMonday.deselect()
+                        self.checkBoxTuesday.deselect()
+                        self.checkBoxWednesday.deselect()
+                        self.checkBoxThursday.deselect()
+                        self.checkBoxFriday.deselect()
+                        self.checkBoxSaturday.deselect()
+
+                        # reset time option menu
+                        self.startHoursMenu.set("9")
+                        self.startMinutesMenu.set("00")
+                        self.startAmPmMenu.set("AM")
+                        self.endHoursMenu.set("10")
+                        self.endMinutesMenu.set("00")
+                        self.endAmPmMenu.set("AM")
+
+                # Database is empty, add course
+                else:
                     # Save information to data base
                     course = {'number': code, 'name': name, 'section': section, 'credit': credit,
-                              'startTime': startTime, 'endTime':endTime, 'dayOfWeek':dayOfWeek,
+                              'startTime': startTime, 'endTime': endTime, 'dayOfWeek': dayOfWeek,
                               'instructor': instructor, 'location': location}
                     self.db.insert(course)
                     # Add course to our course view
-                    courseFrame = CourseFrame(self.courseInputFrame, name, code,
+                    courseFrame = CourseFrame(self, self.courseInputFrame, name, code,
                                               instructor,
                                               location, credit, section,
                                               dayOfWeek, startTime, endTime, self.db)
                     courseFrame.createUI()
-                    #TODO: Remove or comment out, debugging purposes
+                    # TODO: Remove or comment out, debugging purposes
                     print(self.db.all())
 
                     # Clear our entries
@@ -193,49 +246,8 @@ class MainWindow(ctk.CTk):
                     self.endMinutesMenu.set("00")
                     self.endAmPmMenu.set("AM")
 
-            # Database is empty, add course
             else:
-                # Save information to data base
-                course = {'number': code, 'name': name, 'section': section, 'credit': credit,
-                          'startTime': startTime, 'endTime': endTime, 'dayOfWeek': dayOfWeek,
-                          'instructor': instructor, 'location': location}
-                self.db.insert(course)
-                # Add course to our course view
-                courseFrame = CourseFrame(self.courseInputFrame, name, code,
-                                          instructor,
-                                          location, credit, section,
-                                          dayOfWeek, startTime, endTime, self.db)
-                courseFrame.createUI()
-                # TODO: Remove or comment out, debugging purposes
-                print(self.db.all())
-
-                # Clear our entries
-                self.courseEntry.delete(0, ctk.END)
-                self.codeEntry.delete(0, ctk.END)
-                self.creditEntry.delete(0, ctk.END)
-                self.locationEntry.delete(0, ctk.END)
-                self.instructorEntry.delete(0, ctk.END)
-                self.courseSectionEntry.delete(0, ctk.END)
-
-                # reset check boxes
-                self.checkBoxSunday.deselect()
-                self.checkBoxMonday.deselect()
-                self.checkBoxTuesday.deselect()
-                self.checkBoxWednesday.deselect()
-                self.checkBoxThursday.deselect()
-                self.checkBoxFriday.deselect()
-                self.checkBoxSaturday.deselect()
-
-                # reset time option menu
-                self.startHoursMenu.set("9")
-                self.startMinutesMenu.set("00")
-                self.startAmPmMenu.set("AM")
-                self.endHoursMenu.set("10")
-                self.endMinutesMenu.set("00")
-                self.endAmPmMenu.set("AM")
-
-        else:
-            tkinter.messagebox.showwarning("Warning", "All course information must be filled out")
+                tkinter.messagebox.showwarning("Warning", "All course information must be filled out")
 
     def courseInputGUI(self):
         """
@@ -437,7 +449,7 @@ class MainWindow(ctk.CTk):
         # Make sure database isn't empty while we generate CourseClass objects
         if len(database) != 0:
             for courses in database:
-                courseFrame = CourseFrame(self.courseInputFrame, courses['name'], courses['number'], courses['instructor'],
+                courseFrame = CourseFrame(self, self.courseInputFrame, courses['name'], courses['number'], courses['instructor'],
                                           courses['location'], courses['credit'], courses['section'],
                                           courses['dayOfWeek'], courses['startTime'], courses['endTime'], self.db)
                 courseFrame.createUI()
