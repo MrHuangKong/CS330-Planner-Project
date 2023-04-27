@@ -19,9 +19,10 @@ class MainWindow(ctk.CTk):
         self.iconbitmap("schedule5-32.ico")
 
         # Save gui elements to the list so we can destroy them when switching frames
-        self.mainGuiElements = []
-        self.listGuiElements = []
-        self.weeklyGuiElements = []
+        # Use if we aren't destroying children widgets (aka using grid_forget(), currently has memory leak)
+        # self.mainGuiElements = []
+        # self.listGuiElements = []
+        # self.weeklyGuiElements = []
 
         # Start the Database
         self.db = TinyDB('courses.json')
@@ -335,7 +336,7 @@ class MainWindow(ctk.CTk):
         # Create the scrollable frame so we can populate it with added courses
         self.courseInputFrame = ctk.CTkScrollableFrame(self, width=400, height=200)
         self.courseInputFrame.grid(row=1, column=0, columnspan=3, padx=30, pady=5, sticky="EW")
-        self.mainGuiElements.append(self.courseInputFrame)
+        # self.mainGuiElements.append(self.courseInputFrame)
         # ---------------------------------------------------------------
         #                          Buttons
         # ---------------------------------------------------------------
@@ -343,17 +344,17 @@ class MainWindow(ctk.CTk):
         # Create course list button
         courseListButton = ctk.CTkButton(self, text="Course List", command=self.listGUI)
         courseListButton.grid(row=0, column=2, padx=15, pady=5, sticky="EW")
-        self.mainGuiElements.append(courseListButton)  # Add to our list of elements so we can delete it
+        # self.mainGuiElements.append(courseListButton)  # Add to our list of elements so we can delete it
 
         # Weekly View button
         weeklyView = ctk.CTkButton(self, text="Weekly View", command=self.weeklyGui)
         weeklyView.grid(row=0, column=0, padx=15, pady=5, sticky="EW")
-        self.mainGuiElements.append(weeklyView)  # Add to our list of elements so we can delete it
+        # self.mainGuiElements.append(weeklyView)  # Add to our list of elements so we can delete it
 
         # Add course button
         addCourseButton = ctk.CTkButton(self, text="Add Course", command=self.saveCourse)
         addCourseButton.grid(row=5, column=2, padx=50, pady=5, sticky="EW")
-        self.mainGuiElements.append(addCourseButton)  # Add to our list of elements so we can delete it
+        # self.mainGuiElements.append(addCourseButton)  # Add to our list of elements so we can delete it
 
         # ---------------------------------------------------------------
         #                         Entry Fields
@@ -362,32 +363,32 @@ class MainWindow(ctk.CTk):
         # Course code entry
         self.codeEntry = ctk.CTkEntry(self, placeholder_text="Course Code*")
         self.codeEntry.grid(row=2, column=0, padx=5, pady=5, sticky="EW")
-        self.mainGuiElements.append(self.codeEntry)
+        # self.mainGuiElements.append(self.codeEntry)
 
         # Course name
         self.courseEntry = ctk.CTkEntry(self, placeholder_text="Course Name*")
         self.courseEntry.grid(row=2, column=1, padx=5, pady=5, sticky="EW")
-        self.mainGuiElements.append(self.courseEntry)
+        # self.mainGuiElements.append(self.courseEntry)
 
         # Course Section number
         self.courseSectionEntry = ctk.CTkEntry(self, placeholder_text="Section Number*")
         self.courseSectionEntry.grid(row=2, column=2, padx=5, pady=5, sticky="EW")
-        self.mainGuiElements.append(self.courseSectionEntry)
+        # self.mainGuiElements.append(self.courseSectionEntry)
 
         # Course Credit
         self.creditEntry = ctk.CTkEntry(self, placeholder_text="Credit(s)*")
         self.creditEntry.grid(row=3, column=0, padx=5, pady=5, sticky="EW")
-        self.mainGuiElements.append(self.creditEntry)
+        # self.mainGuiElements.append(self.creditEntry)
 
         # Course meeting Location
         self.locationEntry = ctk.CTkEntry(self, placeholder_text="Location*")
         self.locationEntry.grid(row=3, column=1, padx=5, pady=5, sticky="EW")
-        self.mainGuiElements.append(self.locationEntry)
+        # self.mainGuiElements.append(self.locationEntry)
 
         # Course Instructor name
         self.instructorEntry = ctk.CTkEntry(self, placeholder_text="Instructor Name*")
         self.instructorEntry.grid(row=3, column=2, padx=5, pady=5, sticky="EW")
-        self.mainGuiElements.append(self.instructorEntry)
+        # self.mainGuiElements.append(self.instructorEntry)
 
         # ---------------------------------------------------------------
         #                         Check Box
@@ -397,42 +398,42 @@ class MainWindow(ctk.CTk):
         # Frame for check boxes to get packed to
         self.checkBoxFrame = ctk.CTkFrame(self, width=400, height=30, fg_color="transparent")
         self.checkBoxFrame.grid(row=4, column=0, columnspan=3, rowspan=1, padx=5, pady=5, sticky="EW")
-        self.mainGuiElements.append(self.checkBoxFrame)
+        # self.mainGuiElements.append(self.checkBoxFrame)
 
         # Sunday
         self.checkBoxSunday = ctk.CTkCheckBox(self.checkBoxFrame, text="Sun")
         self.checkBoxSunday.grid(row=0, column=0, pady=5, sticky="EW")
-        self.mainGuiElements.append(self.checkBoxSunday)
+        # self.mainGuiElements.append(self.checkBoxSunday)
 
         # Monday
         self.checkBoxMonday = ctk.CTkCheckBox(self.checkBoxFrame, text="Mon")
         self.checkBoxMonday.grid(row=0, column=1, pady=5, sticky="EW")
-        self.mainGuiElements.append(self.checkBoxMonday)
+        # self.mainGuiElements.append(self.checkBoxMonday)
 
         # Tuesday
         self.checkBoxTuesday = ctk.CTkCheckBox(self.checkBoxFrame, text="Tue")
         self.checkBoxTuesday.grid(row=0, column=2, pady=5, sticky="EW")
-        self.mainGuiElements.append(self.checkBoxTuesday)
+        # self.mainGuiElements.append(self.checkBoxTuesday)
 
         # Wednesday
         self.checkBoxWednesday = ctk.CTkCheckBox(self.checkBoxFrame, text="Wed")
         self.checkBoxWednesday.grid(row=0, column=4, pady=5, sticky="EW")
-        self.mainGuiElements.append(self.checkBoxWednesday)
+        # self.mainGuiElements.append(self.checkBoxWednesday)
 
         # Thursday
         self.checkBoxThursday = ctk.CTkCheckBox(self.checkBoxFrame, text="Thu")
         self.checkBoxThursday.grid(row=0, column=5, pady=5, sticky="EW")
-        self.mainGuiElements.append(self.checkBoxThursday)
+        # self.mainGuiElements.append(self.checkBoxThursday)
 
         # Friday
         self.checkBoxFriday = ctk.CTkCheckBox(self.checkBoxFrame, text="Fri")
         self.checkBoxFriday.grid(row=0, column=6, pady=5, sticky="EW")
-        self.mainGuiElements.append(self.checkBoxFriday)
+        # self.mainGuiElements.append(self.checkBoxFriday)
 
         # Saturday
         self.checkBoxSaturday = ctk.CTkCheckBox(self.checkBoxFrame, text="Sat")
         self.checkBoxSaturday.grid(row=0, column=7, pady=5, sticky="EW")
-        self.mainGuiElements.append(self.checkBoxSaturday)
+        # self.mainGuiElements.append(self.checkBoxSaturday)
 
         # ---------------------------------------------------------------
         #                         Option Menu
@@ -444,70 +445,70 @@ class MainWindow(ctk.CTk):
         # Frame to add the Start hours, minutes, and AM/PM option menus to
         self.startTimeFrame = ctk.CTkFrame(self, width=5, height=15, fg_color="transparent")
         self.startTimeFrame.grid(row=5, column=0, rowspan=1, sticky="EW")
-        self.mainGuiElements.append(self.startTimeFrame)
+        # self.mainGuiElements.append(self.startTimeFrame)
 
         # Start
         self.startLabel = ctk.CTkLabel(self.startTimeFrame, text="Start:")
         self.startLabel.grid(row=0, column=0, padx=5, pady=5, sticky="EW")
-        self.mainGuiElements.append(self.startLabel)
+        # self.mainGuiElements.append(self.startLabel)
 
         # Start Hours
         self.startHoursMenu = ctk.CTkOptionMenu(self.startTimeFrame, width=20, values=["1", "2", "3", "4", "5", "6",
                                                                                        "7", "8", "9", "10", "11", "12"])
         self.startHoursMenu.set("9")
         self.startHoursMenu.grid(row=0, column=1, padx=5, pady=5, sticky="EW")
-        self.mainGuiElements.append(self.startHoursMenu)
+        # self.mainGuiElements.append(self.startHoursMenu)
 
         # start: ":" for formatting
         self.startTimeLabel = ctk.CTkLabel(self.startTimeFrame, text=":")
         self.startTimeLabel.grid(row=0, column=2, sticky="EW")
-        self.mainGuiElements.append(self.startTimeLabel)
+        # self.mainGuiElements.append(self.startTimeLabel)
 
         # Start Minutes
         self.startMinutesMenu = ctk.CTkOptionMenu(self.startTimeFrame, width=20, values=["00", "05", "10", "15", "20",
                                                                                          "25", "30", "35", "40", "45",
                                                                                          "50", "55"])
         self.startMinutesMenu.grid(row=0, column=3, padx=5, pady=5, sticky="EW")
-        self.mainGuiElements.append(self.startMinutesMenu)
+        # self.mainGuiElements.append(self.startMinutesMenu)
 
         # Start AM/PM
         self.startAmPmMenu = ctk.CTkOptionMenu(self.startTimeFrame, width=20, values=["AM", "PM"])
         self.startAmPmMenu.grid(row=0, column=4, padx=5, pady=5, sticky="EW")
-        self.mainGuiElements.append(self.startAmPmMenu)
+        # self.mainGuiElements.append(self.startAmPmMenu)
 
         # Frame to add the End hours, minutes, and AM/PM option menus to
         self.endTimeFrame = ctk.CTkFrame(self, width=5, height=15, fg_color="transparent")
         self.endTimeFrame.grid(row=5, column=1, rowspan=1, sticky="EW")
-        self.mainGuiElements.append(self.endTimeFrame)
+        # self.mainGuiElements.append(self.endTimeFrame)
 
         # End
         self.endLabel = ctk.CTkLabel(self.endTimeFrame, text="End:")
         self.endLabel.grid(row=0, column=0, padx=5, pady=5, sticky="EW")
-        self.mainGuiElements.append(self.endLabel)
+        # self.mainGuiElements.append(self.endLabel)
 
         # End Hours
         self.endHoursMenu = ctk.CTkOptionMenu(self.endTimeFrame, width=20, values=["1", "2", "3", "4", "5", "6", "7",
                                                                                    "8", "9", "10", "11", "12"])
         self.endHoursMenu.set("10")
         self.endHoursMenu.grid(row=0, column=1, padx=5, pady=5, sticky="EW")
-        self.mainGuiElements.append(self.endHoursMenu)
+        # self.mainGuiElements.append(self.endHoursMenu)
 
         # end: ":" for formatting
         self.endTimeLabel = ctk.CTkLabel(self.endTimeFrame, text=":")
         self.endTimeLabel.grid(row=0, column=2, sticky="EW")
-        self.mainGuiElements.append(self.endTimeLabel)
+        # self.mainGuiElements.append(self.endTimeLabel)
 
         # End Minutes
         self.endMinutesMenu = ctk.CTkOptionMenu(self.endTimeFrame, width=20, values=["00", "05", "10", "15", "20",
                                                                                      "25", "30", "35", "40", "45", "50",
                                                                                      "55"])
         self.endMinutesMenu.grid(row=0, column=3, padx=5, pady=5, sticky="EW")
-        self.mainGuiElements.append(self.endMinutesMenu)
+        # self.mainGuiElements.append(self.endMinutesMenu)
 
         # End AM/PM
         self.endAmPmMenu = ctk.CTkOptionMenu(self.endTimeFrame, width=20, values=["AM", "PM"])
         self.endAmPmMenu.grid(row=0, column=4, padx=5, pady=5, sticky="EW")
-        self.mainGuiElements.append(self.endAmPmMenu)
+        # self.mainGuiElements.append(self.endAmPmMenu)
 
         # ---------------------------------------------------------------
         #                         Generate Saved Courses
@@ -546,12 +547,12 @@ class MainWindow(ctk.CTk):
         # Frame for weekly calendar view
         self.weeklyViewFrame = ctk.CTkScrollableFrame(self, width=800, height=600)
         self.weeklyViewFrame.grid(row=1, column=0)
-        self.weeklyGuiElements.append(self.weeklyViewFrame)
+        # self.weeklyGuiElements.append(self.weeklyViewFrame)
 
         # Add our widgets (change stuff here, this is just test code)
         self.randomButton = ctk.CTkButton(self, text="Course Input", command=self.backToMain)
         self.randomButton.grid(row=0, column=0, padx=0)
-        self.weeklyGuiElements.append(self.randomButton)
+        # self.weeklyGuiElements.append(self.randomButton)
 
         # ---------------------------------------------------------------
         #                         Week Day Labels
@@ -563,7 +564,7 @@ class MainWindow(ctk.CTk):
         for day in daysOfWeek:
             dayLabel = ctk.CTkLabel(self.weeklyViewFrame, text=day)
             dayLabel.grid(row=0, column=col, padx=25)
-            self.weeklyGuiElements.append(dayLabel)
+            # self.weeklyGuiElements.append(dayLabel)
             col += 1
 
         # ---------------------------------------------------------------
@@ -584,7 +585,7 @@ class MainWindow(ctk.CTk):
             timeLabel = ctk.CTkLabel(self.weeklyViewFrame, text=hourText, height=1, anchor="n")
             timeLabel.grid(row=rowIndex, column=0, padx=5, pady=(0, 0))
             rowIndex += 1
-            self.weeklyGuiElements.append(timeLabel)
+            # self.weeklyGuiElements.append(timeLabel)
 
             minutesLabel = None
             if hour < 21:
@@ -598,7 +599,7 @@ class MainWindow(ctk.CTk):
                     # starts minutes on the row after the hour row
                     minutesLabel.grid(row=rowIndex, column=0, padx=5, pady=(0, 0))
                     rowIndex += 1
-                    self.weeklyGuiElements.append(minutesLabel)
+                    # self.weeklyGuiElements.append(minutesLabel)
                     # get the height of text
                     if minHeight == 0:
                         minutesLabel.update()
@@ -619,7 +620,7 @@ class MainWindow(ctk.CTk):
                                                fg_color="#04AA6D")
                     # TODO: is span+1 right? might be span
                     courseFrame.grid(row=startRow, column=day+1, rowspan=span+1, padx=25)
-                    self.weeklyGuiElements.append(courseFrame)
+                    # self.weeklyGuiElements.append(courseFrame)
 
                     # text going over the courses frame
                     codeText = f"{course['code']}-{course['section']}"
@@ -627,7 +628,7 @@ class MainWindow(ctk.CTk):
                     CourseCodeLabel.pack(expand=True, anchor=ctk.CENTER)
                     # locks the Frame size, so label does not take over the frame size
                     courseFrame.pack_propagate(False)
-                    self.weeklyGuiElements.append(CourseCodeLabel)
+                    # self.weeklyGuiElements.append(CourseCodeLabel)
 
     def listGUI(self):
         """
@@ -643,12 +644,20 @@ class MainWindow(ctk.CTk):
         self.title("Course List")
 
         # ---------------------------------------------------------------
+        #                         Frames
+        # ---------------------------------------------------------------
+
+        self.courseFrame = ctk.CTkScrollableFrame(self, width=400, height=350)
+        self.courseFrame.grid(row=1, column=0, columnspan=4, padx=30, pady=5, sticky="EW")
+        # self.listGuiElements.append(self.courseFrame)
+
+        # ---------------------------------------------------------------
         #                         Options menu
         # ---------------------------------------------------------------
 
         self.filterOptionMenu = ctk.CTkOptionMenu(self, values=["All", "Instructor", "Classroom"])
         self.filterOptionMenu.grid(row=0, column=1)
-        self.listGuiElements.append(self.filterOptionMenu)
+        # self.listGuiElements.append(self.filterOptionMenu)
 
         # ---------------------------------------------------------------
         #                         Entries
@@ -656,15 +665,7 @@ class MainWindow(ctk.CTk):
 
         self.filterEntry = ctk.CTkEntry(self, placeholder_text="Instructor/Classroom")
         self.filterEntry.grid(row=0, column=2)
-        self.listGuiElements.append(self.filterEntry)
-
-        # ---------------------------------------------------------------
-        #                         Frames
-        # ---------------------------------------------------------------
-
-        self.courseFrame = ctk.CTkScrollableFrame(self, width=400, height=350)
-        self.courseFrame.grid(row=1, column=0, columnspan=4, padx=30, pady=5, sticky="EW")
-        self.listGuiElements.append(self.courseFrame)
+        # self.listGuiElements.append(self.filterEntry)
 
         # ---------------------------------------------------------------
         #                         Buttons
@@ -672,11 +673,11 @@ class MainWindow(ctk.CTk):
 
         self.courseInputButton = ctk.CTkButton(self, text="Course Input", command=self.backToMain)
         self.courseInputButton.grid(row=0, column=0)
-        self.listGuiElements.append(self.courseInputButton)
+        # self.listGuiElements.append(self.courseInputButton)
 
         self.filterButton = ctk.CTkButton(self, text="Filter", command=self.filterCourse)
         self.filterButton.grid(row=0, column=3)
-        self.listGuiElements.append(self.filterButton)
+        # self.listGuiElements.append(self.filterButton)
 
     def getCourses(self) -> list:
 
@@ -698,8 +699,12 @@ class MainWindow(ctk.CTk):
         Removes elements on course input to allow new elements to populate
         :return: None
         """
-        for element in self.mainGuiElements:
-            element.grid_forget()
+        # Causes memory leak
+        # for element in self.mainGuiElements:
+        #     element.grid_forget()
+
+        for element in self.winfo_children():
+            element.destroy()
 
     def removeListGui(self):
         """
@@ -709,8 +714,12 @@ class MainWindow(ctk.CTk):
         # reset window title
         self.title("Course Scheduler")
 
-        for element in self.listGuiElements:
-            element.grid_forget()
+        # Causes memory leak
+        # for element in self.listGuiElements:
+        #     element.grid_forget()
+
+        for element in self.winfo_children():
+            element.destroy()
 
     def removeWeeklyGui(self):
         """
@@ -721,8 +730,12 @@ class MainWindow(ctk.CTk):
         self.geometry("700x450")
         self.title("Course Scheduler")
 
-        for element in self.weeklyGuiElements:
-            element.grid_forget()
+        # Causes memory leak
+        # for element in self.weeklyGuiElements:
+        #     element.grid_forget()
+
+        for element in self.winfo_children():
+            element.destroy()
 
     def backToMain(self):
         """
@@ -732,17 +745,17 @@ class MainWindow(ctk.CTk):
         # Window mode set to main, reset our list of widgets
         if self.windowMode == 0:
             self.removeMainGui()
-            self.mainGuiElements = []
+            # self.mainGuiElements = []
 
         # Window mode set to list, reset our list of widgets
         elif self.windowMode == 1:
             self.removeListGui()
-            self.listGuiElements = []
+            # self.listGuiElements = []
 
         # Window mode set to weekly view, reset our list of widgets
         elif self.windowMode == 2:
             self.removeWeeklyGui()
-            self.weeklyGuiElements = []
+            # self.weeklyGuiElements = []
 
         # Return to the main gui
         self.courseInputGUI()
