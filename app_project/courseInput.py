@@ -617,7 +617,7 @@ class MainWindow(ctk.CTk):
         # Make sure database isn't empty while we generate CourseClass objects
         if len(database) != 0:
             for courses in database:
-                courseFrame = CourseFrame(self.courseFrame, courses['name'], courses['number'], courses['instructor'],
+                courseFrame = CourseFrame(self, self.courseFrame, courses['name'], courses['number'], courses['instructor'],
                                           courses['location'], courses['credit'], courses['section'],
                                           courses['dayOfWeek'], courses['startTime'], courses['endTime'], self.db)
                 courseFrame.createUI()
