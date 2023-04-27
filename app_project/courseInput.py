@@ -3,13 +3,21 @@
 # Course Scheduler App
 # ----------------------------------------------------------------------------------------------------------------------
 
+# Import library for GUI
 import tkinter
 import tkinter.messagebox
 from tkinter import *
 import customtkinter as ctk
+
+# Import database
 from tinydb import TinyDB, Query
+
+# Import our CourseClass frame object
 from CourseClass import CourseFrame
 
+# Import Process library to change priority
+import psutil
+import os
 
 class MainWindow(ctk.CTk):
     def __init__(self):
@@ -767,4 +775,7 @@ def main():
 
 
 if __name__ == "__main__":
+    # Set Program to have highest process priority
+    p = psutil.Process(os.getpid())
+    p.nice(psutil.HIGH_PRIORITY_CLASS)
     main()
