@@ -13,9 +13,10 @@ from tinydb import TinyDB, Query, where
 
 class CourseFrame(ctk.CTk):
 
-    def __init__(self, containingFrame, courseName: str, courseCode: str, instructorName: str, location: str, courseCredits: str,
+    def __init__(self, rootFrame, containingFrame, courseName: str, courseCode: str, instructorName: str, location: str, courseCredits: str,
                 sectionNumber: str, daysOfWeek: list, startTime: float, endTime: float, database: TinyDB):
 
+        self.root = rootFrame
         self.containingFrame = containingFrame
         self.courseName = courseName
         self.courseCode = courseCode
