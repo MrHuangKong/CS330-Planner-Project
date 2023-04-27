@@ -100,13 +100,17 @@ class MainWindow(ctk.CTk):
         eM = int(self.endMinutesMenu.get())
 
         # Calculate starting time
-        if self.startAmPmMenu.get() == 'AM':
+        if self.startAmPmMenu.get() == 'AM' and sH != 12:
+            startTime = sH + (sM / 60)
+        elif sH == 12 and self.startAmPmMenu.get() == 'PM':  # Its noon
             startTime = sH + (sM / 60)
         else:  # PM
             startTime = (sH + 12) + (sM / 60)
 
         # Calculate ending time
-        if self.endAmPmMenu.get() == 'AM':
+        if self.endAmPmMenu.get() == 'AM' and eH != 12:
+            endTime = eH + (eM / 60)
+        elif eH == 12 and self.endAmPmMenu.get() == 'PM':  # Its noon
             endTime = eH + (eM / 60)
         else:  # PM
             endTime = (eH + 12) + (eM / 60)
@@ -121,6 +125,9 @@ class MainWindow(ctk.CTk):
 
         # Create a state to break out of our loop
         notFound = True
+
+        # Save whether user wants to add course or not
+        checkUser = 'yes'
 
         # User is editing a course
         if self.editMode:
@@ -137,10 +144,17 @@ class MainWindow(ctk.CTk):
             # Make sure all entry's are filled
             if len(name) and len(code) and len(credit) and len(instructor) and len(section) and len(location) and \
                     sum(dayOfWeek):
+
+                # Check if user is entering a start time late in the day
+                if startTime >= 9 and checkUser == "yes":
+                    checkUser = tkinter.messagebox.askquestion("Warning", "Start time is later than 9 PM, add anyways?",
+                                                               icon="warning")
+
                 # Check if start time and end time isn't too long
-                if abs(startTime - endTime) > 3.0:
+                if abs(startTime - endTime) > 3.0 and checkUser == "yes":
                     checkUser = tkinter.messagebox.askquestion("Warning", "Class duration seems too long, add anyways?",
                                                                icon="warning")
+
                 #  Cancel adding the class
                 if checkUser == 'no':
                     return
@@ -249,6 +263,61 @@ class MainWindow(ctk.CTk):
 
             else:
                 tkinter.messagebox.showwarning("Warning", "All course information must be filled out")
+
+    def filterCourse(self):
+        """
+
+        :return:
+        """
+        option = self.filterOptionMenu.get()
+        grep = Query()
+
+        # Clear all the widgets/elements in the frame
+        for element in self.courseFrame.winfo_children():
+            element.destroy()
+
+        # Generate all courses
+        if option == "All":
+            # Read contents of database, and populate our scrollable frame courseInputFrame
+            database = self.db.all()
+            # Make sure database isn't empty while we generate CourseClass objects
+            if len(database) != 0:
+                for courses in database:
+                    courseFrame = CourseFrame(self, self.courseFrame, courses['name'], courses['number'],
+                                              courses['instructor'],
+                                              courses['location'], courses['credit'], courses['section'],
+                                              courses['dayOfWeek'], courses['startTime'], courses['endTime'], self.db)
+                    courseFrame.createUI()
+                    # deletes the delete and edit button
+                    courseFrame.deleteButton.grid_forget()
+                    courseFrame.editButton.grid_forget()
+
+        # Generate only courses with this specific instructor
+        elif option == "Instructor":
+            key = self.cleanText(self.filterEntry.get())
+            id = self.db.search((grep.instructor == key))
+            for courses in id:
+                courseFrame = CourseFrame(self, self.courseFrame, courses['name'], courses['number'],
+                                          courses['instructor'],
+                                          courses['location'], courses['credit'], courses['section'],
+                                          courses['dayOfWeek'], courses['startTime'], courses['endTime'], self.db)
+                courseFrame.createUI()
+                # deletes the delete and edit button
+                courseFrame.deleteButton.grid_forget()
+                courseFrame.editButton.grid_forget()
+        # Generate only courses with this classroom
+        elif option == "Classroom":
+            key = self.cleanText(self.filterEntry.get())
+            id = self.db.search((grep.location == key))
+            for courses in id:
+                courseFrame = CourseFrame(self, self.courseFrame, courses['name'], courses['number'],
+                                          courses['instructor'],
+                                          courses['location'], courses['credit'], courses['section'],
+                                          courses['dayOfWeek'], courses['startTime'], courses['endTime'], self.db)
+                courseFrame.createUI()
+                # deletes the delete and edit button
+                courseFrame.deleteButton.grid_forget()
+                courseFrame.editButton.grid_forget()
 
     def courseInputGUI(self):
         """
@@ -565,30 +634,19 @@ class MainWindow(ctk.CTk):
         Course list GUI
         :return: None
         """
-        # TODO: When generating the CourseClass objects, add the following two lines so the user can't edit or delete
 
+        # Remove all Course Input widgets
         self.removeMainGui()
+
         # Set window mode to main gui
         self.windowMode = 1
         self.title("Course List")
 
         # ---------------------------------------------------------------
-        #                         Buttons
+        #                         Options menu
         # ---------------------------------------------------------------
 
-        self.courseInputButton = ctk.CTkButton(self, text="Course Input", command=self.backToMain)
-        self.courseInputButton.grid(row=0, column=0)
-        self.listGuiElements.append(self.courseInputButton)
-
-        self.filterButton = ctk.CTkButton(self, text="Filter")
-        self.filterButton.grid(row=0, column=3)
-        self.listGuiElements.append(self.filterButton)
-
-        # ---------------------------------------------------------------
-        #                         Buttons
-        # ---------------------------------------------------------------
-
-        self.filterOptionMenu = ctk.CTkOptionMenu(self, values=["All", "Instructor", "Class Room"])
+        self.filterOptionMenu = ctk.CTkOptionMenu(self, values=["All", "Instructor", "Classroom"])
         self.filterOptionMenu.grid(row=0, column=1)
         self.listGuiElements.append(self.filterOptionMenu)
 
@@ -609,21 +667,16 @@ class MainWindow(ctk.CTk):
         self.listGuiElements.append(self.courseFrame)
 
         # ---------------------------------------------------------------
-        #                         Generate Saved Courses
+        #                         Buttons
         # ---------------------------------------------------------------
 
-        # Read contents of database, and populate our scrollable frame courseInputFrame
-        database = self.db.all()
-        # Make sure database isn't empty while we generate CourseClass objects
-        if len(database) != 0:
-            for courses in database:
-                courseFrame = CourseFrame(self, self.courseFrame, courses['name'], courses['number'], courses['instructor'],
-                                          courses['location'], courses['credit'], courses['section'],
-                                          courses['dayOfWeek'], courses['startTime'], courses['endTime'], self.db)
-                courseFrame.createUI()
-                # deletes the delete and edit button
-                courseFrame.deleteButton.grid_forget()
-                courseFrame.editButton.grid_forget()
+        self.courseInputButton = ctk.CTkButton(self, text="Course Input", command=self.backToMain)
+        self.courseInputButton.grid(row=0, column=0)
+        self.listGuiElements.append(self.courseInputButton)
+
+        self.filterButton = ctk.CTkButton(self, text="Filter", command=self.filterCourse)
+        self.filterButton.grid(row=0, column=3)
+        self.listGuiElements.append(self.filterButton)
 
     def getCourses(self) -> list:
 
