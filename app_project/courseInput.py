@@ -31,6 +31,9 @@ class MainWindow(ctk.CTk):
         # Set window's frame to the courseInput gui
         self.courseInputGUI()
 
+        # Keep track if we're in edit mode
+        self.editMode = False
+
     def __del__(self):
         # Close the database
         self.db.close()
@@ -61,7 +64,7 @@ class MainWindow(ctk.CTk):
         dayOverlap = False
         for i in zip(newDays, savedDays):
             # If we have a match for the days, return True
-            if  i[0] == i[1] and i[0] == 1:
+            if i[0] == i[1] and i[0] == 1:
                 dayOverlap = True
                 break
             else:  # No class day matches
@@ -438,11 +441,6 @@ class MainWindow(ctk.CTk):
                                           courses['location'], courses['credit'], courses['section'],
                                           courses['dayOfWeek'], courses['startTime'], courses['endTime'], self.db)
                 courseFrame.createUI()
-                courseFrame.editButton = ctk.CTkButton(
-                    courseFrame.frame,
-                    text="✎",
-                    width=30)
-                courseFrame.editButton.grid(row=1, column=4, padx=5, pady=5)
 
     def weeklyGui(self):
         """

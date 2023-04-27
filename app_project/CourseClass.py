@@ -144,11 +144,11 @@ class CourseFrame(ctk.CTk):
 
         # Commenting the below out, and placing it inside our courseInput to allow callback database values
         # adding edit button to frame
-        # self.editButton = ctk.CTkButton(
-        #     self.frame,
-        #     text="✎",
-        #     width=30)
-        # self.editButton.grid(row=1, column=4, padx=5, pady=5)
+        self.editButton = ctk.CTkButton(
+            self.frame,
+            text="✎",
+            width=30)
+        self.editButton.grid(row=1, column=4, padx=5, pady=5)
 
     def deleteEntryDB(self):
         """
@@ -164,3 +164,4 @@ class CourseFrame(ctk.CTk):
 
         # Remove from parent frame to show user deleted the course
         self.frame.destroy()
+
