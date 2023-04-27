@@ -16,6 +16,7 @@ class MainWindow(ctk.CTk):
         self.mainFrame = super(MainWindow, self).__init__()
         self.geometry("700x450")
         self.title("Course Scheduler")
+        self.iconbitmap("schedule5-32.ico")
 
         # Save gui elements to the list so we can destroy them when switching frames
         self.mainGuiElements = []
@@ -259,7 +260,7 @@ class MainWindow(ctk.CTk):
         # ---------------------------------------------------------------
 
         # Create course list button
-        courseListButton = ctk.CTkButton(self, text="Course List")
+        courseListButton = ctk.CTkButton(self, text="Course List", command=self.listGUI)
         courseListButton.grid(row=0, column=2, padx=15, pady=5, sticky="EW")
         self.mainGuiElements.append(courseListButton)  # Add to our list of elements so we can delete it
 
@@ -552,12 +553,65 @@ class MainWindow(ctk.CTk):
         Course list GUI
         :return: None
         """
-        #TODO: When generating the CourseClass objects, add the following two lines so the user can't edit or delete
+        # TODO: When generating the CourseClass objects, add the following two lines so the user can't edit or delete
         # the list
+        self.removeMainGui()
+        # Set window mode to main gui
+        self.windowMode = 1
 
-        # courseFrame.deleteButton.grid_forget()
-        # courseFrame.editButton.grid_forget()
-        pass # Delete this once implemented
+        # ---------------------------------------------------------------
+        #                         Buttons
+        # ---------------------------------------------------------------
+
+        # Add our widgets (change stuff here, this is just test code)
+        self.courseInputButton = ctk.CTkButton(self, text="Course Input", command=self.backToMain)
+        self.courseInputButton.grid(row=0, column=0)
+        self.listGuiElements.append(self.courseInputButton)
+
+        self.filterButton = ctk.CTkButton(self, text="Filter")
+        self.filterButton.grid(row=0, column=3)
+        self.listGuiElements.append(self.filterButton)
+
+        # ---------------------------------------------------------------
+        #                         Buttons
+        # ---------------------------------------------------------------
+
+        self.filterOptionMenu = ctk.CTkOptionMenu(self, values=["All", "Instructor", "Class Room"])
+        self.filterOptionMenu.grid(row=0, column=1)
+        self.listGuiElements.append(self.filterOptionMenu)
+
+        # ---------------------------------------------------------------
+        #                         Entries
+        # ---------------------------------------------------------------
+
+        self.filterEntry = ctk.CTkEntry(self, placeholder_text="Instructor/Classroom")
+        self.filterEntry.grid(row=0, column=2)
+        self.listGuiElements.append(self.filterEntry)
+
+        # ---------------------------------------------------------------
+        #                         Frames
+        # ---------------------------------------------------------------
+
+        self.courseFrame = ctk.CTkScrollableFrame(self, width=400, height=350)
+        self.courseFrame.grid(row=1, column=0, columnspan=4, padx=30, pady=5, sticky="EW")
+        self.listGuiElements.append(self.courseFrame)
+
+        # ---------------------------------------------------------------
+        #                         Generate Saved Courses
+        # ---------------------------------------------------------------
+
+        # Read contents of database, and populate our scrollable frame courseInputFrame
+        database = self.db.all()
+        # Make sure database isn't empty while we generate CourseClass objects
+        if len(database) != 0:
+            for courses in database:
+                courseFrame = CourseFrame(self.courseFrame, courses['name'], courses['number'], courses['instructor'],
+                                          courses['location'], courses['credit'], courses['section'],
+                                          courses['dayOfWeek'], courses['startTime'], courses['endTime'], self.db)
+                courseFrame.createUI()
+                # deletes the delete and edit button
+                courseFrame.deleteButton.grid_forget()
+                courseFrame.editButton.grid_forget()
 
     def getCourses(self) -> list:
 
@@ -571,21 +625,7 @@ class MainWindow(ctk.CTk):
                 courseInfo = {"code": courses['number'], "section": courses['section'], "start": courses['startTime'],
                               "end": courses['endTime'], "days": courses['dayOfWeek']}
                 coursesList.append(courseInfo)
-                # courseFrame = CourseFrame(courseInputFrame, courses['name'], courses['number'], courses['instructor'],
-                #                           courses['location'], courses['credit'], courses['section'],
-                #                           courses['dayOfWeek'], courses['startTime'], courses['endTime'])
-        # courseInfo = {"code": "MS411", "section": "01", "start": 08.50, "end": 9.75, "days": [0, 1, 0, 1, 0, 0, 0]}
-        # courses = [courseInfo]
-        # courseInfo = {"code": "BIOL100", "section": "02", "start": 18.00, "end": 20.75, "days": [0, 0, 1, 0, 0, 0, 0]}
-        # courses.append(courseInfo)
-        # courseInfo = {"code": "BIOL100L", "section": "03", "start": 10.00, "end": 12.00, "days": [0, 0, 0, 0, 0, 1, 0]}
-        # courses.append(courseInfo)
-        # courseInfo = {"code": "CS230", "section": "01", "start": 12.00, "end": 12.75, "days": [0, 1, 0, 1, 0, 1, 0]}
-        # courses.append(courseInfo)
-        # courseInfo = {"code": "CS478", "section": "01", "start": 11.00, "end": 12.25, "days": [0, 0, 1, 0, 1, 0, 0]}
-        # courses.append(courseInfo)
-        # courseInfo = {"code": "CS481", "section": "01", "start": 10.00, "end": 10.75, "days": [0, 1, 0, 0, 0, 0, 0]}
-        # courses.append(courseInfo)
+
         return coursesList
 
     def removeMainGui(self):
