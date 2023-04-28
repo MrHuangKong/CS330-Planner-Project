@@ -125,6 +125,10 @@ class MainWindow(ctk.CTk):
         else:  # PM
             endTime = (eH + 12) + (eM / 60)
 
+        # Check if endtime is before starttime
+        if startTime >= endTime:
+            startTimeIsGreater = True
+
         # Clean our entries
         name = self.cleanText(name)
         code = self.cleanText(code).upper()
@@ -154,6 +158,12 @@ class MainWindow(ctk.CTk):
             # Make sure all entry's are filled
             if len(name) and len(code) and len(credit) and len(instructor) and len(section) and len(location) and \
                     sum(dayOfWeek):
+
+                # Check if start time is greater than end time
+                if startTimeIsGreater and checkUser == "yes":
+                    checkUser = tkinter.messagebox.askquestion("Warning", "Start time is greater than end time, "
+                                                                          "add anyways?",
+                                                               icon="warning")
 
                 # Check if user is entering a start time late in the day
                 if startTime >= 21 and checkUser == "yes":
@@ -203,8 +213,7 @@ class MainWindow(ctk.CTk):
                                                   location, credit, section,
                                                   dayOfWeek, startTime, endTime, self.db)
                         courseFrame.createUI()
-                        #TODO: Remove or comment out, debugging purposes
-                        print(self.db.all())
+                        # print(self.db.all())
 
                         # Clear our entries
                         self.courseEntry.delete(0, ctk.END)
@@ -244,8 +253,7 @@ class MainWindow(ctk.CTk):
                                               location, credit, section,
                                               dayOfWeek, startTime, endTime, self.db)
                     courseFrame.createUI()
-                    # TODO: Remove or comment out, debugging purposes
-                    print(self.db.all())
+                    # print(self.db.all())
 
                     # Clear our entries
                     self.courseEntry.delete(0, ctk.END)
@@ -277,8 +285,8 @@ class MainWindow(ctk.CTk):
 
     def filterCourse(self):
         """
-
-        :return:
+        Filters out only courses based on query type to display to GUI
+        :return: None
         """
         option = self.filterOptionMenu.get()
         grep = Query()
@@ -628,7 +636,7 @@ class MainWindow(ctk.CTk):
                     # frame being placed on calendar
                     courseFrame = ctk.CTkFrame(self.weeklyViewFrame, width=60, height=(minHeight*span),
                                                fg_color="#04AA6D")
-                    # TODO: is span+1 right? might be span
+
                     courseFrame.grid(row=startRow, column=day+1, rowspan=span+1, padx=25)
                     # self.weeklyGuiElements.append(courseFrame)
 
