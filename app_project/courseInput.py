@@ -18,6 +18,7 @@ from CourseClass import CourseFrame
 # Import Process library to change priority
 import psutil
 import os
+import sys
 
 class MainWindow(ctk.CTk):
     def __init__(self):
@@ -775,7 +776,20 @@ def main():
 
 
 if __name__ == "__main__":
-    # Set Program to have highest process priority
+    # Check if its windows or macos
+    try:
+        sys.getwindowsversion()
+    except AttributeError:
+        isWindows = False
+    else:
+        isWindows = True
+
+    # Grab our process id from os
     p = psutil.Process(os.getpid())
-    p.nice(psutil.HIGH_PRIORITY_CLASS)
+    if isWindows:
+        # Set pid priority to high
+        p.nice(psutil.HIGH_PRIORITY_CLASS)
+    else:
+        # Set pid to 10
+        p.nice(10)
     main()
