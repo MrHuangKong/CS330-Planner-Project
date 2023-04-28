@@ -157,7 +157,8 @@ class MainWindow(ctk.CTk):
 
                 # Check if user is entering a start time late in the day
                 if startTime >= 21 and checkUser == "yes":
-                    checkUser = tkinter.messagebox.askquestion("Warning", "Start time is later than 9 PM, add anyways?",
+                    checkUser = tkinter.messagebox.askquestion("Warning", "Start time is later than 9 PM, Weekly View "
+                                                                          "will have limited support. Add anyways?",
                                                                icon="warning")
 
                 # Check if start time and end time isn't too long
