@@ -1,1 +1,0 @@
-This is now developed, move to test-release!
