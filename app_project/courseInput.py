@@ -16,9 +16,9 @@ from tinydb import TinyDB, Query
 from CourseClass import CourseFrame
 
 # Import Process library to change priority
-import psutil
-import os
-import sys
+# import psutil
+# import os
+# import sys
 
 class MainWindow(ctk.CTk):
     def __init__(self):
@@ -126,6 +126,7 @@ class MainWindow(ctk.CTk):
             endTime = (eH + 12) + (eM / 60)
 
         # Check if endtime is before starttime
+        startTimeIsGreater = False
         if startTime >= endTime:
             startTimeIsGreater = True
 
@@ -786,19 +787,19 @@ def main():
 
 if __name__ == "__main__":
     # Check if its windows or macos
-    try:
-        sys.getwindowsversion()
-    except AttributeError:
-        isWindows = False
-    else:
-        isWindows = True
-
-    # Grab our process id from os
-    p = psutil.Process(os.getpid())
-    if isWindows:
-        # Set pid priority to high
-        p.nice(psutil.HIGH_PRIORITY_CLASS)
-    else:
-        # Set pid to 10
-        p.nice(10)
+    # try:
+    #     sys.getwindowsversion()
+    # except AttributeError:
+    #     isWindows = False
+    # else:
+    #     isWindows = True
+    #
+    # # Grab our process id from os
+    # p = psutil.Process(os.getpid())
+    # if isWindows:
+    #     # Set pid priority to high
+    #     p.nice(psutil.HIGH_PRIORITY_CLASS)
+    # else:
+    #     # Set pid to 10
+    #     p.nice(10)
     main()
