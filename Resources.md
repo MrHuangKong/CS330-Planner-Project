@@ -16,3 +16,6 @@
 
 ## Install Pip
 - https://www.activestate.com/resources/quick-reads/how-to-install-pip-on-windows/
+
+## Export Tkinter Widgets to PDF
+- https://www.plus2net.com/python/tkinter-text-pdf.php
