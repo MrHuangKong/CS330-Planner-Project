@@ -1,36 +1,37 @@
-# Capital University - CS330 Software Engineering Project
-### Nicolas Huang & Devin Zeller
-### Dr. Feng
-### 3/10/2023
+# Course Scheduler App
 
-## Project Statement
+## Overview
+The Course Scheduler App is a powerful tool designed to simplify the management and scheduling of university courses. Its primary purpose is to allow administrators and students to efficiently schedule classes, prevent time conflicts, and visualize weekly course arrangements. The app focuses on resolving classroom conflicts, automating scheduling tasks, and presenting schedules in an easy-to-read format.
 
-### User Input Requirements
-- Your system will need to handle information about courses, and display them in a weekly calendar view (similar to a schedule planner). 
-The system should allow the user to input these parameters:
+This application is ideal for universities, colleges, or any educational institution where multiple classes and schedules need to be managed without overlaps or conflicts.
 
-            - Course Name (e.g Software Engineering)
-            - Course Code (e.g CS330)
-            - Section Number (e.g 01)
-            - Course Credit (e.g 3-credit)
-            - Frequency of Lectures (e.g 3 x a week)
-            - Instructor Name (e.g Dr. Feng)
-            - Preferred Timing (e.g M, W, F 9:00-10:00 AM)
-            - Preferred Classroom (e.g BHSN 224)
+## Purpose
+The Course Scheduler App was developed to:
+- **Organize Course Timetables:** Streamline the process of assigning courses to timeslots and classrooms.
+- **Prevent Conflicts:** Ensure that no two courses overlap in the same classroom and/or time slot.
+- **Visualize Weekly Schedules:** Provide a calendar view to help users easily understand class timings and locations.
 
-### Feature Requirements
-  - Based on these user entered course information, your system should automatically generate a timetable, which will be displayed as a weekly calendar format for easier visualization. 
-  - System should be able to resolve
+## Features
+### 1. **Course Management**
+- **Add, Edit, and Delete Courses:** Users can input course information, including course name, instructor, location, and time.
+- **Dynamic Updates:** Changes to the schedule are reflected immediately, ensuring that the information stays up-to-date.
 
-            - Time Conflicts
-            - Classroom Conflicts
-            - As well as suggest alternatives to resolve the conflicts
-  - Ability to 
+### 2. **Conflict Detection**
+- **Time and Classroom Conflict Prevention:** The app detects scheduling conflicts, preventing two courses from being assigned the same time slot or classroom.
 
-            - Add Courses
-            - Edit Courses
-            - Delete Courses
-  - Provide reports, such as 
+### 3. **Calendar View**
+- **Weekly Schedule Visualization:** Displays a full view of the week, showing course times and locations in a calendar format.
 
-            - List all courses
-            - Schedule for a specific course or classroom
+### 4. **Reports**
+- **Course Lists:** Generate a list of all scheduled courses with relevant details.
+- **Classroom Schedules:** View schedules organized by classroom, making it easy to check room availability.
+
+### 5. **User-Friendly Interface**
+- **Responsive Design:** Works across multiple operating systems, including windows, macos, and linux, to ensure easy access.
+- **Quick Navigation:** Simple and intuitive input forms for adding or modifying courses.
+
+## Installation
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/MrHuangKong/Course-Scheduler-App.git
+   cd Course-Scheduler-App
